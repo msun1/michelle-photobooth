@@ -5,7 +5,7 @@ import { Upload, Download } from "lucide-react";
 import bg1 from "./images/backgrounds/bg1.jpg";
 
 import smiskiTheme from "./images/themes/smiskiTheme.png";
-import sunsetTheme from "./images/themes/smiskiTheme.png";
+import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.png";
 import mintTheme from "./images/themes/smiskiTheme.png";
 import bubblegumTheme from "./images/themes/smiskiTheme.png";
 
@@ -36,9 +36,9 @@ const THEMES = {
     photoTop: 35,
     photoSpacing: 16,
   },
-  sunset: {
-    name: "Sunset",
-    image: sunsetTheme,
+  sonnyAngel: {
+    name: "Sonny Angel",
+    image: sonnyAngelTheme,
     accent: "#ff6b35",
     frameWidth: 444,
     frameHeight: 1413,

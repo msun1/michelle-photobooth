@@ -6,8 +6,8 @@ import bg1 from "./images/backgrounds/bg1.jpg";
 
 import smiskiTheme from "./images/themes/smiskiTheme.png";
 import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.png";
-import mintTheme from "./images/themes/smiskiTheme.png";
-import bubblegumTheme from "./images/themes/smiskiTheme.png";
+import miffyTheme from "./images/themes/miffyTheme.png";
+import strawberryTheme from "./images/themes/strawberryTheme.png";
 
 import sticker1 from "./images/stickers/smiskiSticker.png";
 import sticker2 from "./images/stickers/smiskiSticker.png";
@@ -40,17 +40,17 @@ const THEMES = {
     name: "Sonny Angel",
     image: sonnyAngelTheme,
     accent: "#ff6b35",
-    frameWidth: 444,
-    frameHeight: 1413,
-    photoWidth: 348,
-    photoHeight: 229,
-    photoLeft: 45,
-    photoTop: 58,
-    photoSpacing: 38,
+    frameWidth: 228,
+    frameHeight: 719,
+    photoWidth: 177,
+    photoHeight: 117,
+    photoLeft: 24,
+    photoTop: 40,
+    photoSpacing: 19,
   },
-  mint: {
-    name: "Mint",
-    image: mintTheme,
+  miffy: {
+    name: "Miffy",
+    image: miffyTheme,
     accent: "#10b981",
     frameWidth: 444,
     frameHeight: 1413,
@@ -60,9 +60,9 @@ const THEMES = {
     photoTop: 58,
     photoSpacing: 38,
   },
-  bubblegum: {
-    name: "Bubblegum",
-    image: bubblegumTheme,
+  strawberry: {
+    name: "Strawberry",
+    image: strawberryTheme,
     accent: "#ec4899",
     frameWidth: 444,
     frameHeight: 1413,

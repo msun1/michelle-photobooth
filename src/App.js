@@ -1,13 +1,21 @@
 import React, { useState, useRef } from "react";
-import { Upload, Download, X } from "lucide-react";
+import { Download, X } from "lucide-react";
 
-// Import images - UPDATE THESE PATHS to match actual filenames
-import bg1 from "./images/backgrounds/bg1.jpg";
+// Import images
+import bg from "./images/backgrounds/bg.jpg";
 
 import smiskiTheme from "./images/themes/smiskiTheme.png";
 import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.png";
 import miffyTheme from "./images/themes/miffyTheme.png";
 import strawberryTheme from "./images/themes/strawberryTheme.png";
+
+// Import button images
+import heartButton from "./images/buttons/heart-button.png";
+import heartButtonDown from "./images/buttons/heart-button-down.png";
+import smiskiButton from "./images/buttons/smiski-button.png";
+import sonnyAngelButton from "./images/buttons/sonnyAngel-button.png";
+import miffyButton from "./images/buttons/miffy-button.png";
+import strawberryButton from "./images/buttons/strawberry-button.png";
 
 import sticker1 from "./images/stickers/smiskiSticker.png";
 import sticker2 from "./images/stickers/smiskiSticker.png";
@@ -22,12 +30,11 @@ import sticker10 from "./images/stickers/smiskiSticker.png";
 import sticker11 from "./images/stickers/smiskiSticker.png";
 import sticker12 from "./images/stickers/smiskiSticker.png";
 
-// Theme configuration
 const THEMES = {
   smiski: {
     name: "Smiski",
     image: smiskiTheme,
-    accent: "#e2ffdaff",
+    buttonImage: smiskiButton,
     frameWidth: 281,
     frameHeight: 881,
     photoWidth: 223,
@@ -39,7 +46,7 @@ const THEMES = {
   sonnyAngel: {
     name: "Sonny Angel",
     image: sonnyAngelTheme,
-    accent: "#ff6b35",
+    buttonImage: sonnyAngelButton,
     frameWidth: 228,
     frameHeight: 719,
     photoWidth: 177,
@@ -51,7 +58,7 @@ const THEMES = {
   miffy: {
     name: "Miffy",
     image: miffyTheme,
-    accent: "#10b981",
+    buttonImage: miffyButton,
     frameWidth: 281,
     frameHeight: 886,
     photoWidth: 218,
@@ -63,7 +70,7 @@ const THEMES = {
   strawberry: {
     name: "Strawberry",
     image: strawberryTheme,
-    accent: "#ec4899",
+    buttonImage: strawberryButton,
     frameWidth: 280,
     frameHeight: 876,
     photoWidth: 215,
@@ -95,6 +102,7 @@ export default function PhotoboothApp() {
   const [stickers, setStickers] = useState([]);
   const [selectedSticker, setSelectedSticker] = useState(null);
   const [compositeImage, setCompositeImage] = useState(null);
+  const [isHeartPressed, setIsHeartPressed] = useState(false);
   const stripRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -161,8 +169,8 @@ export default function PhotoboothApp() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const displayWidth = 296;
-    const displayHeight = (config.frameHeight / config.frameWidth) * 296;
+    const displayWidth = 222;
+    const displayHeight = (config.frameHeight / config.frameWidth) * 222;
     canvas.width = displayWidth;
     canvas.height = displayHeight;
 
@@ -354,204 +362,206 @@ export default function PhotoboothApp() {
 
   return (
     <div
-      className="min-h-screen p-8 bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: `url(${bg1})` }}
+      className="min-h-screen bg-cover bg-center overflow-hidden"
+      style={{
+        backgroundImage: `url(${bg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        height: "100vh",
+        width: "100vw",
+      }}
     >
-      <div className="max-w-6xl mx-auto">
-        <h1
-          className="text-5xl font-black text-center mb-2 text-white drop-shadow-lg"
-          style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+      <div
+        className="max-w-full mx-auto relative"
+        style={{ height: "100vh", overflow: "hidden" }}
+      >
+        {/* Heart Button - positioned at (150, 100) */}
+        <div className="absolute" style={{ left: "135px", top: "150px" }}>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            multiple
+            className="hidden"
+          />
+          <img
+            src={isHeartPressed ? heartButtonDown : heartButton}
+            alt="Upload Photos"
+            className="cursor-pointer transition-transform active:scale-95"
+            style={{ width: "110px", height: "auto" }}
+            onClick={() => fileInputRef.current?.click()}
+            onMouseDown={() => setIsHeartPressed(true)}
+            onMouseUp={() => setIsHeartPressed(false)}
+            onMouseLeave={() => setIsHeartPressed(false)}
+            draggable="false"
+          />
+        </div>
+
+        {images.length > 0 && (
+          <p
+            className="absolute text-center text-white drop-shadow-lg font-bold"
+            style={{
+              left: "137px",
+              top: "234px",
+              width: "100px",
+              fontSize: "12px",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+            }}
+          >
+            {images.length} photo{images.length !== 1 ? "s" : ""}
+          </p>
+        )}
+
+        {/* Theme Buttons - moved down 130 pixels to (100, 290) */}
+        <div
+          className="absolute flex gap-0"
+          style={{ left: "80px", top: "320px" }}
         >
-          photobooth :)
-        </h1>
-        <p
-          className="text-center text-white drop-shadow-lg mb-8 font-medium"
-          style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
-        >
-          Upload up to 4 photos and create your strip!
-        </p>
+          {Object.entries(THEMES).map(([key, t], index) => (
+            <img
+              key={key}
+              src={t.buttonImage}
+              alt={t.name}
+              className={`cursor-pointer transition-all ${
+                theme === key ? "scale-110 drop-shadow-2xl" : "hover:scale-105"
+              }`}
+              style={{
+                width: "auto",
+                height: "50px",
+                marginLeft: index === 0 ? "0" : "50px",
+              }}
+              onClick={() => {
+                setTheme(key);
+                setStickers([]);
+              }}
+              draggable="false"
+            />
+          ))}
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div className="bg-white rounded-3xl p-6 shadow-lg border-4 border-gray-800">
-              <h2 className="text-2xl font-black mb-4 text-gray-800">
-                Upload Photos
-              </h2>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                multiple
-                className="hidden"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 border-4 border-blue-700 shadow-lg transition-all active:translate-y-1"
-              >
-                <Upload size={24} />
-                Choose Photos (Max 4)
-              </button>
-              {images.length > 0 && (
-                <p className="mt-3 text-center text-gray-600 font-medium">
-                  {images.length} photo{images.length !== 1 ? "s" : ""} uploaded
-                </p>
-              )}
+        {/* Stickers Section */}
+        {displayImages.length > 0 && STICKERS.length > 0 && (
+          <div
+            className="absolute rounded-3xl p-6"
+            style={{ left: "60px", top: "520px", width: "500px" }}
+          >
+            <div className="grid grid-cols-6 gap-2 mb-4">
+              {STICKERS.map((sticker, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedSticker(sticker)}
+                  className={`p-2 rounded-xl border-3 transition-all ${
+                    selectedSticker === sticker
+                      ? "border-purple-300 scale-110 border-4"
+                      : "border-gray-300 hover:bg-gray-100 border-2"
+                  }`}
+                >
+                  <img
+                    src={sticker}
+                    alt={`Sticker ${idx + 1}`}
+                    className="w-full h-10 object-contain"
+                  />
+                </button>
+              ))}
             </div>
-
-            <div className="bg-white rounded-3xl p-6 shadow-lg border-4 border-gray-800">
-              <h2 className="text-2xl font-black mb-4 text-gray-800">
-                Choose Theme
-              </h2>
-              <div className="grid grid-cols-2 gap-3">
-                {Object.entries(THEMES).map(([key, t]) => (
-                  <button
-                    key={key}
-                    onClick={() => {
-                      setTheme(key);
-                      setStickers([]);
-                    }}
-                    className={`py-3 px-4 rounded-xl font-bold border-4 transition-all overflow-hidden ${
-                      theme === key
-                        ? "border-gray-800 shadow-lg scale-105"
-                        : "border-gray-400 hover:border-gray-600"
-                    }`}
-                  >
-                    <img
-                      src={t.image}
-                      alt={t.name}
-                      className="w-full h-20 object-cover rounded-lg mb-2"
-                    />
-                    <span className="text-sm">{t.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {displayImages.length > 0 && STICKERS.length > 0 && (
-              <div className="bg-white rounded-3xl p-6 shadow-lg border-4 border-gray-800">
-                <h2 className="text-2xl font-black mb-4 text-gray-800">
-                  Add Stickers
-                </h2>
-                <div className="grid grid-cols-6 gap-2 mb-4">
-                  {STICKERS.map((sticker, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedSticker(sticker)}
-                      className={`p-2 rounded-xl border-3 transition-all ${
-                        selectedSticker === sticker
-                          ? "bg-yellow-200 border-yellow-500 scale-110 border-4"
-                          : "bg-gray-50 border-gray-300 hover:bg-gray-100 border-2"
-                      }`}
-                    >
-                      <img
-                        src={sticker}
-                        alt={`Sticker ${idx + 1}`}
-                        className="w-full h-10 object-contain"
-                      />
-                    </button>
-                  ))}
-                </div>
-                {selectedSticker && (
-                  <p className="text-center text-sm text-gray-600 font-medium">
-                    Click on the strip to add sticker
-                  </p>
-                )}
-              </div>
-            )}
-
-            {displayImages.length > 0 && (
-              <button
-                onClick={downloadStrip}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 border-4 border-green-700 shadow-lg transition-all active:translate-y-1"
-              >
-                <Download size={24} />
-                Download Strip
-              </button>
+            {selectedSticker && (
+              <p className="text-center text-sm text-gray-600 font-medium">
+                Click on the strip to add sticker
+              </p>
             )}
           </div>
+        )}
 
-          <div className="flex flex-col items-center">
-            <h2
-              className="text-2xl font-black mb-4 text-white drop-shadow-lg"
-              style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
-            >
-              Preview
-            </h2>
-            {displayImages.length > 0 ? (
-              <div className="relative">
-                <div
-                  ref={stripRef}
-                  onClick={handleStripClick}
-                  className="relative shadow-2xl cursor-crosshair select-none"
-                  style={{
-                    width: "296px",
-                    height: `${
-                      (THEMES[theme].frameHeight / THEMES[theme].frameWidth) *
-                      296
-                    }px`,
-                  }}
-                >
-                  {compositeImage && (
+        {/* Download Button */}
+        {displayImages.length > 0 && (
+          <button
+            onClick={downloadStrip}
+            className="absolute bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 border-4 border-green-700 shadow-lg transition-all active:translate-y-1"
+            style={{ left: "900px", bottom: "50px", width: "200px" }}
+          >
+            <Download size={24} />
+            Download Strip
+          </button>
+        )}
+
+        {/* Preview Section - removed "Preview" text */}
+        <div
+          className="absolute flex flex-col items-center"
+          style={{ right: "70px", top: "20px" }}
+        >
+          {displayImages.length > 0 ? (
+            <div className="relative">
+              <div
+                ref={stripRef}
+                onClick={handleStripClick}
+                className="relative shadow-2xl cursor-crosshair select-none"
+                style={{
+                  width: "222px",
+                  height: `${
+                    (THEMES[theme].frameHeight / THEMES[theme].frameWidth) * 222
+                  }px`,
+                  maxHeight: "100vh",
+                }}
+              >
+                {compositeImage && (
+                  <img
+                    src={compositeImage}
+                    alt="Photo strip"
+                    className="w-full h-full pointer-events-none select-none"
+                    draggable="false"
+                    style={{ userSelect: "none" }}
+                  />
+                )}
+
+                {stickers.map((sticker) => (
+                  <div
+                    key={sticker.id}
+                    className="sticker-item absolute select-none group cursor-move"
+                    style={{
+                      left: `${sticker.x}%`,
+                      top: `${sticker.y}%`,
+                      transform: `translate(-50%, -50%)`,
+                      width: `${sticker.size}px`,
+                      height: `${sticker.size}px`,
+                      zIndex: 20,
+                      pointerEvents: "auto",
+                    }}
+                    onMouseDown={(e) => handleStickerMouseDown(e, sticker)}
+                  >
                     <img
-                      src={compositeImage}
-                      alt="Photo strip"
-                      className="w-full h-full pointer-events-none select-none"
+                      src={sticker.image}
+                      alt="Sticker"
+                      className="w-full h-full object-contain pointer-events-none"
                       draggable="false"
                       style={{ userSelect: "none" }}
                     />
-                  )}
-
-                  {stickers.map((sticker) => (
-                    <div
-                      key={sticker.id}
-                      className="sticker-item absolute select-none group cursor-move"
-                      style={{
-                        left: `${sticker.x}%`,
-                        top: `${sticker.y}%`,
-                        transform: `translate(-50%, -50%)`,
-                        width: `${sticker.size}px`,
-                        height: `${sticker.size}px`,
-                        zIndex: 20,
-                        pointerEvents: "auto",
-                      }}
-                      onMouseDown={(e) => handleStickerMouseDown(e, sticker)}
+                    <button
+                      className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => removeSticker(e, sticker.id)}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      style={{ pointerEvents: "auto" }}
                     >
-                      <img
-                        src={sticker.image}
-                        alt="Sticker"
-                        className="w-full h-full object-contain pointer-events-none"
-                        draggable="false"
-                        style={{ userSelect: "none" }}
-                      />
-                      <button
-                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => removeSticker(e, sticker.id)}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        style={{ pointerEvents: "auto" }}
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <div
-                className="bg-gray-100 border-4 border-dashed border-gray-400 flex items-center justify-center"
-                style={{
-                  width: "296px",
-                  height: `${
-                    (THEMES[theme].frameHeight / THEMES[theme].frameWidth) * 296
-                  }px`,
-                }}
-              >
-                <p className="text-gray-400 font-bold text-center px-4">
-                  Upload photos to see your strip!
-                </p>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div
+              className="bg-gray-100 border-4 border-dashed border-gray-400 flex items-center justify-center"
+              style={{
+                width: "222px",
+                height: "700px",
+              }}
+            >
+              <p className="text-gray-400 font-bold text-center px-4">
+                Upload photos to see your strip!
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -52,25 +52,25 @@ const THEMES = {
     name: "Miffy",
     image: miffyTheme,
     accent: "#10b981",
-    frameWidth: 444,
-    frameHeight: 1413,
-    photoWidth: 348,
-    photoHeight: 229,
-    photoLeft: 45,
-    photoTop: 58,
-    photoSpacing: 38,
+    frameWidth: 281,
+    frameHeight: 886,
+    photoWidth: 218,
+    photoHeight: 142,
+    photoLeft: 31,
+    photoTop: 68,
+    photoSpacing: 25,
   },
   strawberry: {
     name: "Strawberry",
     image: strawberryTheme,
     accent: "#ec4899",
-    frameWidth: 444,
-    frameHeight: 1413,
-    photoWidth: 348,
-    photoHeight: 229,
-    photoLeft: 45,
-    photoTop: 58,
-    photoSpacing: 38,
+    frameWidth: 280,
+    frameHeight: 876,
+    photoWidth: 215,
+    photoHeight: 140,
+    photoLeft: 33,
+    photoTop: 73,
+    photoSpacing: 25,
   },
 };
 
@@ -94,7 +94,6 @@ export default function PhotoboothApp() {
   const [theme, setTheme] = useState("smiski");
   const [stickers, setStickers] = useState([]);
   const [selectedSticker, setSelectedSticker] = useState(null);
-  const [activeStickerIndex, setActiveStickerIndex] = useState(null);
   const [compositeImage, setCompositeImage] = useState(null);
   const stripRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -151,7 +150,6 @@ export default function PhotoboothApp() {
     });
   };
 
-  // Regenerate composite image when theme changes
   React.useEffect(() => {
     if (images.length > 0) {
       generateCompositeImage(images, theme);
@@ -163,7 +161,6 @@ export default function PhotoboothApp() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Use display size for preview
     const displayWidth = 296;
     const displayHeight = (config.frameHeight / config.frameWidth) * 296;
     canvas.width = displayWidth;
@@ -171,7 +168,6 @@ export default function PhotoboothApp() {
 
     const scale = displayWidth / config.frameWidth;
 
-    // Get display images (with duplicates if needed)
     const displayImages =
       photoImages.length === 4
         ? photoImages
@@ -183,7 +179,6 @@ export default function PhotoboothApp() {
             return display;
           })();
 
-    // Draw photos first
     const photoPromises = displayImages.map((src, idx) => {
       return new Promise((resolve) => {
         const img = new Image();
@@ -203,7 +198,6 @@ export default function PhotoboothApp() {
     });
 
     Promise.all(photoPromises).then(() => {
-      // Draw frame on top
       const themeImg = new Image();
       themeImg.onload = () => {
         ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
@@ -228,8 +222,7 @@ export default function PhotoboothApp() {
     if (!selectedSticker || !stripRef.current) return;
 
     const isSticker = e.target.closest(".sticker-item");
-    const isControl = e.target.closest(".sticker-controls");
-    if (isSticker || isControl) return;
+    if (isSticker) return;
 
     const rect = stripRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -237,19 +230,17 @@ export default function PhotoboothApp() {
 
     setStickers([
       ...stickers,
-      { image: selectedSticker, x, y, id: Date.now(), size: 60, rotation: 0 },
+      { image: selectedSticker, x, y, id: Date.now(), size: 150 },
     ]);
-    setActiveStickerIndex(stickers.length);
   };
 
-  const removeSticker = (id) => {
-    setStickers(stickers.filter((s) => s.id !== id));
-    setActiveStickerIndex(null);
-  };
-
-  const handleStickerMouseDown = (e, index) => {
+  const removeSticker = (e, id) => {
     e.stopPropagation();
-    setActiveStickerIndex(index);
+    setStickers(stickers.filter((s) => s.id !== id));
+  };
+
+  const handleStickerMouseDown = (e, sticker) => {
+    e.stopPropagation();
 
     if (!stripRef.current) return;
     const rect = stripRef.current.getBoundingClientRect();
@@ -259,57 +250,8 @@ export default function PhotoboothApp() {
       const y = ((moveEvent.clientY - rect.top) / rect.height) * 100;
 
       setStickers((prev) =>
-        prev.map((s, i) => (i === index ? { ...s, x, y } : s))
+        prev.map((s) => (s.id === sticker.id ? { ...s, x, y } : s))
       );
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  };
-
-  const handleCornerDrag = (e, index, corner) => {
-    e.stopPropagation();
-    if (!stripRef.current) return;
-
-    const sticker = stickers[index];
-    const rect = stripRef.current.getBoundingClientRect();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startSize = sticker.size;
-    const startRotation = sticker.rotation;
-
-    const onMouseMove = (moveEvent) => {
-      const deltaX = moveEvent.clientX - startX;
-      const deltaY = moveEvent.clientY - startY;
-
-      if (corner === "rotate") {
-        // Calculate rotation based on mouse position relative to sticker center
-        const stickerCenterX = (sticker.x / 100) * rect.width;
-        const stickerCenterY = (sticker.y / 100) * rect.height;
-        const angle =
-          Math.atan2(
-            moveEvent.clientY - rect.top - stickerCenterY,
-            moveEvent.clientX - rect.left - stickerCenterX
-          ) *
-          (180 / Math.PI);
-
-        setStickers((prev) =>
-          prev.map((s, i) => (i === index ? { ...s, rotation: angle + 90 } : s))
-        );
-      } else {
-        // Resize based on distance from center
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const newSize = Math.max(30, Math.min(150, startSize + distance * 0.3));
-
-        setStickers((prev) =>
-          prev.map((s, i) => (i === index ? { ...s, size: newSize } : s))
-        );
-      }
     };
 
     const onMouseUp = () => {
@@ -367,7 +309,7 @@ export default function PhotoboothApp() {
             stickerImg.onload = () => {
               const x = (sticker.x / 100) * config.frameWidth;
               const y = (sticker.y / 100) * config.frameHeight;
-              const size = (sticker.size / 60) * 80;
+              const size = (sticker.size / 150) * 195;
 
               const imgAspect = stickerImg.width / stickerImg.height;
               let drawWidth = size;
@@ -379,18 +321,13 @@ export default function PhotoboothApp() {
                 drawWidth = size * imgAspect;
               }
 
-              ctx.save();
-              ctx.translate(x, y);
-              ctx.rotate((sticker.rotation * Math.PI) / 180);
               ctx.drawImage(
                 stickerImg,
-                -drawWidth / 2,
-                -drawHeight / 2,
+                x - drawWidth / 2,
+                y - drawHeight / 2,
                 drawWidth,
                 drawHeight
               );
-              ctx.restore();
-
               resolve();
             };
             stickerImg.onerror = () => resolve();
@@ -473,7 +410,6 @@ export default function PhotoboothApp() {
                     onClick={() => {
                       setTheme(key);
                       setStickers([]);
-                      setActiveStickerIndex(null);
                     }}
                     className={`py-3 px-4 rounded-xl font-bold border-4 transition-all overflow-hidden ${
                       theme === key
@@ -556,7 +492,6 @@ export default function PhotoboothApp() {
                     }px`,
                   }}
                 >
-                  {/* Single composite image instead of layers */}
                   {compositeImage && (
                     <img
                       src={compositeImage}
@@ -567,130 +502,37 @@ export default function PhotoboothApp() {
                     />
                   )}
 
-                  {stickers.map((sticker, index) => (
-                    <React.Fragment key={sticker.id}>
-                      {/* Sticker Image */}
-                      <div
-                        className="sticker-item absolute cursor-move select-none"
-                        style={{
-                          left: `${sticker.x}%`,
-                          top: `${sticker.y}%`,
-                          transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg)`,
-                          width: `${sticker.size}px`,
-                          height: `${sticker.size}px`,
-                          zIndex: activeStickerIndex === index ? 30 : 20,
-                          pointerEvents: "auto",
-                        }}
-                        onMouseDown={(e) => handleStickerMouseDown(e, index)}
+                  {stickers.map((sticker) => (
+                    <div
+                      key={sticker.id}
+                      className="sticker-item absolute select-none group cursor-move"
+                      style={{
+                        left: `${sticker.x}%`,
+                        top: `${sticker.y}%`,
+                        transform: `translate(-50%, -50%)`,
+                        width: `${sticker.size}px`,
+                        height: `${sticker.size}px`,
+                        zIndex: 20,
+                        pointerEvents: "auto",
+                      }}
+                      onMouseDown={(e) => handleStickerMouseDown(e, sticker)}
+                    >
+                      <img
+                        src={sticker.image}
+                        alt="Sticker"
+                        className="w-full h-full object-contain pointer-events-none"
+                        draggable="false"
+                        style={{ userSelect: "none" }}
+                      />
+                      <button
+                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => removeSticker(e, sticker.id)}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        style={{ pointerEvents: "auto" }}
                       >
-                        <img
-                          src={sticker.image}
-                          alt="Sticker"
-                          className="w-full h-full object-contain"
-                          draggable="false"
-                          style={{ pointerEvents: "none", userSelect: "none" }}
-                        />
-                      </div>
-
-                      {/* Selection Box & Handles */}
-                      {activeStickerIndex === index && (
-                        <div
-                          className="sticker-controls absolute"
-                          style={{
-                            left: `${sticker.x}%`,
-                            top: `${sticker.y}%`,
-                            transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg)`,
-                            width: `${sticker.size + 20}px`,
-                            height: `${sticker.size + 20}px`,
-                            zIndex: 31,
-                            pointerEvents: "none",
-                          }}
-                        >
-                          {/* Border */}
-                          <div
-                            className="absolute inset-0 border-2 border-blue-500 rounded"
-                            style={{ pointerEvents: "none" }}
-                          />
-
-                          {/* Corner Handles for Resizing */}
-                          <div
-                            className="absolute w-4 h-4 bg-white border-2 border-blue-500 rounded-full cursor-nwse-resize"
-                            style={{
-                              top: "-8px",
-                              left: "-8px",
-                              pointerEvents: "auto",
-                            }}
-                            onMouseDown={(e) =>
-                              handleCornerDrag(e, index, "tl")
-                            }
-                          />
-                          <div
-                            className="absolute w-4 h-4 bg-white border-2 border-blue-500 rounded-full cursor-nesw-resize"
-                            style={{
-                              top: "-8px",
-                              right: "-8px",
-                              pointerEvents: "auto",
-                            }}
-                            onMouseDown={(e) =>
-                              handleCornerDrag(e, index, "tr")
-                            }
-                          />
-                          <div
-                            className="absolute w-4 h-4 bg-white border-2 border-blue-500 rounded-full cursor-nesw-resize"
-                            style={{
-                              bottom: "-8px",
-                              left: "-8px",
-                              pointerEvents: "auto",
-                            }}
-                            onMouseDown={(e) =>
-                              handleCornerDrag(e, index, "bl")
-                            }
-                          />
-                          <div
-                            className="absolute w-4 h-4 bg-white border-2 border-blue-500 rounded-full cursor-nwse-resize"
-                            style={{
-                              bottom: "-8px",
-                              right: "-8px",
-                              pointerEvents: "auto",
-                            }}
-                            onMouseDown={(e) =>
-                              handleCornerDrag(e, index, "br")
-                            }
-                          />
-
-                          {/* Rotation Handle */}
-                          <div
-                            className="absolute w-4 h-4 bg-blue-500 border-2 border-white rounded-full cursor-grab active:cursor-grabbing"
-                            style={{
-                              top: "-30px",
-                              left: "50%",
-                              transform: "translateX(-50%)",
-                              pointerEvents: "auto",
-                            }}
-                            onMouseDown={(e) =>
-                              handleCornerDrag(e, index, "rotate")
-                            }
-                          />
-
-                          {/* Delete Button */}
-                          <button
-                            className="absolute bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
-                            style={{
-                              top: "-35px",
-                              right: "-15px",
-                              pointerEvents: "auto",
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeSticker(sticker.id);
-                            }}
-                            onMouseDown={(e) => e.stopPropagation()}
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                      )}
-                    </React.Fragment>
+                        <X size={14} />
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>

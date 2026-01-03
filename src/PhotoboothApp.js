@@ -31,6 +31,7 @@ import sticker11 from "./images/stickers/smiskiSticker.png";
 import sticker12 from "./images/stickers/smiskiSticker.png";
 
 import backButton from "./images/buttons/back-button.png";
+import downloadButton from "./images/buttons/download-button.png";
 
 const THEMES = {
   smiski: {
@@ -478,14 +479,19 @@ export default function PhotoboothApp() {
 
         {/* Download Button */}
         {displayImages.length > 0 && (
-          <button
+          <img
+            src={downloadButton}
+            alt="Download Strip"
             onClick={downloadStrip}
-            className="absolute bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 border-4 border-green-700 shadow-lg transition-all active:translate-y-1"
-            style={{ left: "900px", bottom: "50px", width: "200px" }}
-          >
-            <Download size={24} />
-            Download Strip
-          </button>
+            className="absolute cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            style={{
+              left: "1050px",
+              bottom: "50px",
+              width: "auto",
+              height: "100px",
+            }}
+            draggable="false"
+          />
         )}
 
         {/* Preview Section - removed "Preview" text */}
@@ -570,13 +576,13 @@ export default function PhotoboothApp() {
         <button
           onClick={() => (window.location.href = "/")}
           className="absolute"
-          style={{ left: "50px", bottom: "50px" }}
+          style={{ left: "40px", bottom: "10px" }}
         >
           <img
             src={backButton}
             alt="Back to Home"
             className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
-            style={{ width: "auto", height: "60px" }}
+            style={{ width: "120px", height: "auto" }}
             draggable="false"
           />
         </button>

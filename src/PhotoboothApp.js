@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Download, X } from "lucide-react";
+import { X } from "lucide-react";
 
 // Import images
 import bg from "./images/backgrounds/bg.jpg";
@@ -122,8 +122,9 @@ export default function PhotoboothApp() {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
 
-            const targetWidth = currentThemeConfig.photoWidth;
-            const targetHeight = currentThemeConfig.photoHeight;
+            // Use 3x resolution for better quality
+            const targetWidth = currentThemeConfig.photoWidth * 3;
+            const targetHeight = currentThemeConfig.photoHeight * 3;
             canvas.width = targetWidth;
             canvas.height = targetHeight;
 
@@ -144,6 +145,10 @@ export default function PhotoboothApp() {
               drawHeight = drawWidth / aspectRatio;
               offsetY = -(drawHeight - targetHeight) / 2;
             }
+
+            // Enable image smoothing for better quality
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
 
             ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
             resolve(canvas.toDataURL("image/jpeg", 0.95));
@@ -172,8 +177,11 @@ export default function PhotoboothApp() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const displayWidth = 222;
-    const displayHeight = (config.frameHeight / config.frameWidth) * 222;
+    // Render preview at 2x resolution for crisp display
+    const previewScale = 2;
+    const displayWidth = 222 * previewScale;
+    const displayHeight =
+      (config.frameHeight / config.frameWidth) * 222 * previewScale;
     canvas.width = displayWidth;
     canvas.height = displayHeight;
 
@@ -201,6 +209,9 @@ export default function PhotoboothApp() {
             scale;
           const width = config.photoWidth * scale;
           const height = config.photoHeight * scale;
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
           ctx.drawImage(img, x, y, width, height);
           resolve();
         };
@@ -282,8 +293,13 @@ export default function PhotoboothApp() {
 
     const config = THEMES[theme];
 
-    canvas.width = config.frameWidth;
-    canvas.height = config.frameHeight;
+    // Use 3x resolution for high quality output
+    const outputScale = 3;
+    canvas.width = config.frameWidth * outputScale;
+    canvas.height = config.frameHeight * outputScale;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     const displayImages = getDisplayImages();
 
@@ -293,13 +309,15 @@ export default function PhotoboothApp() {
         img.crossOrigin = "anonymous";
         img.onload = () => {
           const y =
-            config.photoTop + idx * (config.photoHeight + config.photoSpacing);
+            (config.photoTop +
+              idx * (config.photoHeight + config.photoSpacing)) *
+            outputScale;
           ctx.drawImage(
             img,
-            config.photoLeft,
+            config.photoLeft * outputScale,
             y,
-            config.photoWidth,
-            config.photoHeight
+            config.photoWidth * outputScale,
+            config.photoHeight * outputScale
           );
           resolve();
         };
@@ -311,16 +329,16 @@ export default function PhotoboothApp() {
       const themeImg = new Image();
       themeImg.crossOrigin = "anonymous";
       themeImg.onload = () => {
-        ctx.drawImage(themeImg, 0, 0, config.frameWidth, config.frameHeight);
+        ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
 
         const stickerPromises = stickers.map((sticker) => {
           return new Promise((resolve) => {
             const stickerImg = new Image();
             stickerImg.crossOrigin = "anonymous";
             stickerImg.onload = () => {
-              const x = (sticker.x / 100) * config.frameWidth;
-              const y = (sticker.y / 100) * config.frameHeight;
-              const size = (sticker.size / 150) * 195;
+              const x = (sticker.x / 100) * canvas.width;
+              const y = (sticker.y / 100) * canvas.height;
+              const size = (sticker.size / 150) * 195 * outputScale;
 
               const imgAspect = stickerImg.width / stickerImg.height;
               let drawWidth = size;
@@ -354,7 +372,7 @@ export default function PhotoboothApp() {
             a.download = "photostrip.png";
             a.click();
             URL.revokeObjectURL(url);
-          });
+          }, "image/png");
         });
       };
       themeImg.src = config.image;

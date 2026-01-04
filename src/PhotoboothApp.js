@@ -521,7 +521,7 @@ export default function PhotoboothApp() {
     if (images.length > 0) {
       generateCompositeImage(images, theme);
     }
-  }, [theme]);
+  }, [theme, images]);
 
   const generateCompositeImage = (photoImages, themeKey) => {
     const config = THEMES[themeKey];
@@ -961,7 +961,7 @@ export default function PhotoboothApp() {
                 {compositeImage && (
                   <img
                     src={compositeImage}
-                    alt="Photo strip"
+                    alt="strip"
                     className="w-full h-full pointer-events-none select-none"
                     draggable="false"
                     style={{ userSelect: "none" }}
@@ -1064,7 +1064,7 @@ export default function PhotoboothApp() {
                   <img
                     key={idx}
                     src={photo}
-                    alt={`Photo ${idx + 1}`}
+                    alt={`p ${idx + 1}`}
                     className="w-20 h-20 object-cover rounded border-2 border-pink-500"
                   />
                 ))}

@@ -43,6 +43,10 @@ import sticker13 from "./images/stickers/starSticker.png";
 import sticker14 from "./images/stickers/cakeSticker.png";
 import sticker15 from "./images/stickers/cakeSliceSticker.png";
 import sticker16 from "./images/stickers/matchaThoughtsSticker.png";
+import sticker17 from "./images/stickers/butterflySticker.png";
+import sticker18 from "./images/stickers/heartStickerSmall.png";
+import sticker19 from "./images/stickers/starStickerSmall.png";
+import sticker20 from "./images/stickers/butterflySticker.png";
 
 import backButton from "./images/buttons/back-button.png";
 import downloadButton from "./images/buttons/download-button.png";
@@ -174,22 +178,159 @@ const THEMES = {
 };
 
 const STICKERS = [
-  { src: sticker1, width: 40, left: 75, top: 510, rotation: -20 },
-  { src: sticker2, width: 50, left: 140, top: 520, rotation: 10 },
-  { src: sticker3, width: 50, left: 200, top: 510, rotation: -8 },
-  { src: sticker4, width: 60, left: 260, top: 520, rotation: 0 },
-  { src: sticker5, width: 70, left: 310, top: 500, rotation: 0 },
-  { src: sticker6, width: 80, left: 360, top: 500, rotation: 0 },
-  { src: sticker7, width: 60, left: 480, top: 497, rotation: -10 },
-  { src: sticker8, width: 70, left: 75, top: 600, rotation: 0 },
-  { src: sticker9, width: 60, left: 220, top: 600, rotation: 0 },
-  { src: sticker10, width: 60, left: 320, top: 570, rotation: -10 },
-  { src: sticker11, width: 40, left: 440, top: 500, rotation: 0 },
-  { src: sticker12, width: 100, left: 450, top: 660, rotation: 0 },
-  { src: sticker13, width: 40, left: 435, top: 560, rotation: 0 },
-  { src: sticker14, width: 65, left: 150, top: 610, rotation: 0 },
-  { src: sticker15, width: 60, left: 280, top: 645, rotation: 0 },
-  { src: sticker16, width: 100, left: 83, top: 660, rotation: 0 },
+  {
+    src: sticker1,
+    width: 40,
+    left: 75,
+    top: 510,
+    rotation: -20,
+    printSize: 150, // smiski
+  },
+  {
+    src: sticker2,
+    width: 50,
+    left: 140,
+    top: 520,
+    rotation: 10,
+    printSize: 150, // panda sonny angel
+  },
+  {
+    src: sticker3,
+    width: 50,
+    left: 200,
+    top: 510,
+    rotation: -8,
+    printSize: 150, // strawberry sonny angel
+  },
+  {
+    src: sticker4,
+    width: 60,
+    left: 260,
+    top: 520,
+    rotation: 0,
+    printSize: 150, // miffy cake
+  },
+  {
+    src: sticker5,
+    width: 70,
+    left: 310,
+    top: 500,
+    rotation: 0,
+    printSize: 100, // croissant
+  },
+  {
+    src: sticker6,
+    width: 80,
+    left: 360,
+    top: 500,
+    rotation: 0,
+    printSize: 150, // campus life
+  },
+  {
+    src: sticker7,
+    width: 60,
+    left: 480,
+    top: 497,
+    rotation: -10,
+    printSize: 150, // miffy
+  },
+  { src: sticker8, width: 70, left: 75, top: 600, rotation: 0, printSize: 100 }, // smiski swirl cake
+  {
+    src: sticker9,
+    width: 60,
+    left: 220,
+    top: 600,
+    rotation: 0,
+    printSize: 100, // miffy cupcake
+  },
+  {
+    src: sticker10,
+    width: 60,
+    left: 320,
+    top: 570,
+    rotation: -10,
+    printSize: 150, // miffy illinois
+  },
+  {
+    src: sticker11,
+    width: 40,
+    left: 440,
+    top: 500,
+    rotation: 0,
+    printSize: 100, // heart
+  },
+  {
+    src: sticker12,
+    width: 100,
+    left: 450,
+    top: 660,
+    rotation: 0,
+    printSize: 150, // sunny days
+  },
+  {
+    src: sticker13,
+    width: 40,
+    left: 435,
+    top: 560,
+    rotation: 0,
+    printSize: 100, // star
+  },
+  {
+    src: sticker14,
+    width: 65,
+    left: 150,
+    top: 610,
+    rotation: 0,
+    printSize: 80, // cake
+  },
+  {
+    src: sticker15,
+    width: 60,
+    left: 280,
+    top: 645,
+    rotation: 0,
+    printSize: 80, // cake slice
+  },
+  {
+    src: sticker16,
+    width: 100,
+    left: 83,
+    top: 660,
+    rotation: 0,
+    printSize: 150, // matcha thoughts
+  },
+  {
+    src: sticker17,
+    width: 60,
+    left: 384,
+    top: 590,
+    rotation: 0,
+    printSize: 100, // butterfly
+  },
+  {
+    src: sticker18,
+    width: 20,
+    left: 350,
+    top: 660,
+    rotation: 0,
+    printSize: 50, // small heart
+  },
+  {
+    src: sticker19,
+    width: 20,
+    left: 520,
+    top: 610,
+    rotation: 0,
+    printSize: 50, // small star
+  },
+  {
+    src: sticker20,
+    width: 40,
+    left: 190,
+    top: 670,
+    rotation: 0,
+    printSize: 50, // small butterfly
+  },
 ];
 
 export default function PhotoboothApp() {
@@ -288,7 +429,6 @@ export default function PhotoboothApp() {
             return display;
           })();
 
-    // Draw frame first, then photos on top
     const themeImg = new Image();
     themeImg.onload = () => {
       ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
@@ -315,7 +455,6 @@ export default function PhotoboothApp() {
       });
 
       Promise.all(photoPromises).then(() => {
-        // Draw overlay if it exists
         if (config.overlay) {
           const overlayImg = new Image();
           overlayImg.onload = () => {
@@ -370,7 +509,13 @@ export default function PhotoboothApp() {
 
     setStickers([
       ...stickers,
-      { image: selectedSticker.src, x, y, id: Date.now(), size: 150 },
+      {
+        image: selectedSticker.src,
+        x,
+        y,
+        id: Date.now(),
+        size: selectedSticker.printSize,
+      },
     ]);
 
     setSelectedSticker(null);
@@ -422,7 +567,6 @@ export default function PhotoboothApp() {
 
     const displayImages = getDisplayImages();
 
-    // Draw frame first, then photos on top
     const themeImg = new Image();
     themeImg.crossOrigin = "anonymous";
     themeImg.onload = () => {
@@ -452,7 +596,6 @@ export default function PhotoboothApp() {
 
       Promise.all(photoPromises).then(() => {
         const drawOverlayAndStickers = () => {
-          // Draw overlay if it exists
           if (config.overlay) {
             const overlayImg = new Image();
             overlayImg.crossOrigin = "anonymous";
@@ -472,12 +615,10 @@ export default function PhotoboothApp() {
                 overlayHeight
               );
 
-              // Then draw stickers
               drawStickers();
             };
             overlayImg.src = config.overlay.image;
           } else {
-            // No overlay, just draw stickers
             drawStickers();
           }
         };
@@ -589,7 +730,6 @@ export default function PhotoboothApp() {
           </p>
         )}
 
-        {/* Theme Buttons - individually positioned */}
         {Object.entries(THEMES).map(([key, t]) => {
           if (!t.buttonImage) return null;
           return (

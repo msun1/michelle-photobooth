@@ -8,8 +8,9 @@ import smiskiTheme from "./images/themes/smiskiTheme.png";
 import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.png";
 import miffyTheme from "./images/themes/miffyTheme.png";
 import strawberryTheme from "./images/themes/strawberryTheme.png";
-import whiteTheme from "./images/themes/whiteTheme.png";
+import whiteTheme from "./images/themes/whiteTheme.jpg";
 import blackTheme from "./images/themes/blackTheme.png";
+import yellowTheme from "./images/themes/yellowTheme.png";
 
 // Import button images
 import heartButton from "./images/buttons/heart-button.png";
@@ -18,8 +19,9 @@ import smiskiButton from "./images/buttons/smiski-button.png";
 import sonnyAngelButton from "./images/buttons/sonnyAngel-button.png";
 import miffyButton from "./images/buttons/miffy-button.png";
 import strawberryButton from "./images/buttons/strawberry-button.png";
-// import whiteButton from "./images/buttons/white-button.png";
-// import blackButton from "./images/buttons/black-button.png";
+import whiteButton from "./images/buttons/white-button.png";
+import blackButton from "./images/buttons/black-button.png";
+import yellowButton from "./images/buttons/yellow-button.png";
 
 import sticker1 from "./images/stickers/smiskiSticker.png";
 import sticker2 from "./images/stickers/pandaSonnyAngelSticker.png";
@@ -46,6 +48,9 @@ const THEMES = {
     name: "Smiski",
     image: smiskiTheme,
     buttonImage: smiskiButton,
+    buttonWidth: 60,
+    buttonLeft: 80,
+    buttonTop: 315,
     frameWidth: 281,
     frameHeight: 881,
     photoWidth: 223,
@@ -58,6 +63,9 @@ const THEMES = {
     name: "Sonny Angel",
     image: sonnyAngelTheme,
     buttonImage: sonnyAngelButton,
+    buttonWidth: 110,
+    buttonLeft: 230,
+    buttonTop: 315,
     frameWidth: 228,
     frameHeight: 719,
     photoWidth: 177,
@@ -70,6 +78,9 @@ const THEMES = {
     name: "Miffy",
     image: miffyTheme,
     buttonImage: miffyButton,
+    buttonWidth: 60,
+    buttonLeft: 420,
+    buttonTop: 315,
     frameWidth: 281,
     frameHeight: 886,
     photoWidth: 218,
@@ -82,8 +93,11 @@ const THEMES = {
     name: "Strawberry",
     image: strawberryTheme,
     buttonImage: strawberryButton,
+    buttonWidth: 140,
+    buttonLeft: 140,
+    buttonTop: 380,
     frameWidth: 280,
-    frameHeight: 876,
+    frameHeight: 879,
     photoWidth: 215,
     photoHeight: 140,
     photoLeft: 33,
@@ -93,26 +107,47 @@ const THEMES = {
   white: {
     name: "White",
     image: whiteTheme,
-    buttonImage: strawberryButton, // whiteButton
-    frameWidth: 220,
-    frameHeight: 700,
-    photoWidth: 180,
-    photoHeight: 130,
-    photoLeft: 20,
-    photoTop: 20,
-    photoSpacing: 20,
+    buttonImage: whiteButton,
+    buttonWidth: 70,
+    buttonLeft: 580,
+    buttonTop: 315,
+    frameWidth: 421,
+    frameHeight: 1316,
+    photoWidth: 320,
+    photoHeight: 209,
+    photoLeft: 51,
+    photoTop: 97,
+    photoSpacing: 36,
   },
   black: {
     name: "Black",
     image: blackTheme,
-    buttonImage: strawberryButton, // blackButton
-    frameWidth: 220,
-    frameHeight: 700,
-    photoWidth: 180,
-    photoHeight: 130,
-    photoLeft: 20,
-    photoTop: 20,
-    photoSpacing: 20,
+    buttonImage: blackButton,
+    buttonWidth: 70,
+    buttonLeft: 364,
+    buttonTop: 374,
+    frameWidth: 283,
+    frameHeight: 881,
+    photoWidth: 212,
+    photoHeight: 139,
+    photoLeft: 36,
+    photoTop: 64,
+    photoSpacing: 23,
+  },
+  yellow: {
+    name: "Yellow",
+    image: yellowTheme,
+    buttonImage: yellowButton,
+    buttonWidth: 70,
+    buttonLeft: 510,
+    buttonTop: 370,
+    frameWidth: 282,
+    frameHeight: 883,
+    photoWidth: 217,
+    photoHeight: 142,
+    photoLeft: 34,
+    photoTop: 60,
+    photoSpacing: 25,
   },
 };
 
@@ -231,35 +266,70 @@ export default function PhotoboothApp() {
             return display;
           })();
 
-    const photoPromises = displayImages.map((src, idx) => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          const x = config.photoLeft * scale;
-          const y =
-            (config.photoTop +
-              idx * (config.photoHeight + config.photoSpacing)) *
-            scale;
-          const width = config.photoWidth * scale;
-          const height = config.photoHeight * scale;
-
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
-          ctx.drawImage(img, x, y, width, height);
-          resolve();
-        };
-        img.src = src;
-      });
-    });
-
-    Promise.all(photoPromises).then(() => {
+    // For white theme, draw frame first, then photos on top
+    if (themeKey === "white") {
       const themeImg = new Image();
       themeImg.onload = () => {
         ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
-        setCompositeImage(canvas.toDataURL());
+
+        const photoPromises = displayImages.map((src, idx) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              const x = config.photoLeft * scale;
+              const y =
+                (config.photoTop +
+                  idx * (config.photoHeight + config.photoSpacing)) *
+                scale;
+              const width = config.photoWidth * scale;
+              const height = config.photoHeight * scale;
+
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = "high";
+              ctx.drawImage(img, x, y, width, height);
+              resolve();
+            };
+            img.src = src;
+          });
+        });
+
+        Promise.all(photoPromises).then(() => {
+          setCompositeImage(canvas.toDataURL());
+        });
       };
       themeImg.src = config.image;
-    });
+    } else {
+      // For all other themes, draw photos first, then frame on top
+      const photoPromises = displayImages.map((src, idx) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const x = config.photoLeft * scale;
+            const y =
+              (config.photoTop +
+                idx * (config.photoHeight + config.photoSpacing)) *
+              scale;
+            const width = config.photoWidth * scale;
+            const height = config.photoHeight * scale;
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+            ctx.drawImage(img, x, y, width, height);
+            resolve();
+          };
+          img.src = src;
+        });
+      });
+
+      Promise.all(photoPromises).then(() => {
+        const themeImg = new Image();
+        themeImg.onload = () => {
+          ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
+          setCompositeImage(canvas.toDataURL());
+        };
+        themeImg.src = config.image;
+      });
+    }
   };
 
   const getDisplayImages = () => {
@@ -337,80 +407,159 @@ export default function PhotoboothApp() {
 
     const displayImages = getDisplayImages();
 
-    const photoPromises = displayImages.map((src, idx) => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => {
-          const y =
-            (config.photoTop +
-              idx * (config.photoHeight + config.photoSpacing)) *
-            outputScale;
-          ctx.drawImage(
-            img,
-            config.photoLeft * outputScale,
-            y,
-            config.photoWidth * outputScale,
-            config.photoHeight * outputScale
-          );
-          resolve();
-        };
-        img.src = src;
-      });
-    });
-
-    Promise.all(photoPromises).then(() => {
+    // For white theme, draw frame first, then photos on top
+    if (theme === "white") {
       const themeImg = new Image();
       themeImg.crossOrigin = "anonymous";
       themeImg.onload = () => {
         ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
 
-        const stickerPromises = stickers.map((sticker) => {
+        const photoPromises = displayImages.map((src, idx) => {
           return new Promise((resolve) => {
-            const stickerImg = new Image();
-            stickerImg.crossOrigin = "anonymous";
-            stickerImg.onload = () => {
-              const x = (sticker.x / 100) * canvas.width;
-              const y = (sticker.y / 100) * canvas.height;
-              const size = (sticker.size / 150) * 195 * outputScale;
-
-              const imgAspect = stickerImg.width / stickerImg.height;
-              let drawWidth = size;
-              let drawHeight = size;
-
-              if (imgAspect > 1) {
-                drawHeight = size / imgAspect;
-              } else if (imgAspect < 1) {
-                drawWidth = size * imgAspect;
-              }
-
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => {
+              const y =
+                (config.photoTop +
+                  idx * (config.photoHeight + config.photoSpacing)) *
+                outputScale;
               ctx.drawImage(
-                stickerImg,
-                x - drawWidth / 2,
-                y - drawHeight / 2,
-                drawWidth,
-                drawHeight
+                img,
+                config.photoLeft * outputScale,
+                y,
+                config.photoWidth * outputScale,
+                config.photoHeight * outputScale
               );
               resolve();
             };
-            stickerImg.onerror = () => resolve();
-            stickerImg.src = sticker.image;
+            img.src = src;
           });
         });
 
-        Promise.all(stickerPromises).then(() => {
-          canvas.toBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "photostrip.png";
-            a.click();
-            URL.revokeObjectURL(url);
-          }, "image/png");
+        Promise.all(photoPromises).then(() => {
+          const stickerPromises = stickers.map((sticker) => {
+            return new Promise((resolve) => {
+              const stickerImg = new Image();
+              stickerImg.crossOrigin = "anonymous";
+              stickerImg.onload = () => {
+                const x = (sticker.x / 100) * canvas.width;
+                const y = (sticker.y / 100) * canvas.height;
+                const size = (sticker.size / 150) * 195 * outputScale;
+
+                const imgAspect = stickerImg.width / stickerImg.height;
+                let drawWidth = size;
+                let drawHeight = size;
+
+                if (imgAspect > 1) {
+                  drawHeight = size / imgAspect;
+                } else if (imgAspect < 1) {
+                  drawWidth = size * imgAspect;
+                }
+
+                ctx.drawImage(
+                  stickerImg,
+                  x - drawWidth / 2,
+                  y - drawHeight / 2,
+                  drawWidth,
+                  drawHeight
+                );
+                resolve();
+              };
+              stickerImg.onerror = () => resolve();
+              stickerImg.src = sticker.image;
+            });
+          });
+
+          Promise.all(stickerPromises).then(() => {
+            canvas.toBlob((blob) => {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "photostrip.png";
+              a.click();
+              URL.revokeObjectURL(url);
+            }, "image/png");
+          });
         });
       };
       themeImg.src = config.image;
-    });
+    } else {
+      // For all other themes, draw photos first, then frame on top
+      const photoPromises = displayImages.map((src, idx) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+            const y =
+              (config.photoTop +
+                idx * (config.photoHeight + config.photoSpacing)) *
+              outputScale;
+            ctx.drawImage(
+              img,
+              config.photoLeft * outputScale,
+              y,
+              config.photoWidth * outputScale,
+              config.photoHeight * outputScale
+            );
+            resolve();
+          };
+          img.src = src;
+        });
+      });
+
+      Promise.all(photoPromises).then(() => {
+        const themeImg = new Image();
+        themeImg.crossOrigin = "anonymous";
+        themeImg.onload = () => {
+          ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
+
+          const stickerPromises = stickers.map((sticker) => {
+            return new Promise((resolve) => {
+              const stickerImg = new Image();
+              stickerImg.crossOrigin = "anonymous";
+              stickerImg.onload = () => {
+                const x = (sticker.x / 100) * canvas.width;
+                const y = (sticker.y / 100) * canvas.height;
+                const size = (sticker.size / 150) * 195 * outputScale;
+
+                const imgAspect = stickerImg.width / stickerImg.height;
+                let drawWidth = size;
+                let drawHeight = size;
+
+                if (imgAspect > 1) {
+                  drawHeight = size / imgAspect;
+                } else if (imgAspect < 1) {
+                  drawWidth = size * imgAspect;
+                }
+
+                ctx.drawImage(
+                  stickerImg,
+                  x - drawWidth / 2,
+                  y - drawHeight / 2,
+                  drawWidth,
+                  drawHeight
+                );
+                resolve();
+              };
+              stickerImg.onerror = () => resolve();
+              stickerImg.src = sticker.image;
+            });
+          });
+
+          Promise.all(stickerPromises).then(() => {
+            canvas.toBlob((blob) => {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "photostrip.png";
+              a.click();
+              URL.revokeObjectURL(url);
+            }, "image/png");
+          });
+        };
+        themeImg.src = config.image;
+      });
+    }
   };
 
   const displayImages = getDisplayImages();
@@ -468,36 +617,31 @@ export default function PhotoboothApp() {
           </p>
         )}
 
-        <div
-          className="absolute flex gap-0"
-          style={{ left: "80px", top: "320px" }}
-        >
-          {Object.entries(THEMES).map(([key, t], index) => {
-            if (!t.buttonImage) return null;
-            return (
-              <img
-                key={key}
-                src={t.buttonImage}
-                alt={t.name}
-                className={`cursor-pointer transition-all ${
-                  theme === key
-                    ? "scale-110 drop-shadow-2xl"
-                    : "hover:scale-105"
-                }`}
-                style={{
-                  width: "auto",
-                  height: "50px",
-                  marginLeft: index === 0 ? "0" : "50px",
-                }}
-                onClick={() => {
-                  setTheme(key);
-                  setStickers([]);
-                }}
-                draggable="false"
-              />
-            );
-          })}
-        </div>
+        {/* Theme Buttons - individually positioned */}
+        {Object.entries(THEMES).map(([key, t]) => {
+          if (!t.buttonImage) return null;
+          return (
+            <img
+              key={key}
+              src={t.buttonImage}
+              alt={t.name}
+              className={`absolute cursor-pointer transition-all ${
+                theme === key ? "scale-110 drop-shadow-2xl" : "hover:scale-105"
+              }`}
+              style={{
+                left: `${t.buttonLeft}px`,
+                top: `${t.buttonTop}px`,
+                width: `${t.buttonWidth}px`,
+                height: "auto",
+              }}
+              onClick={() => {
+                setTheme(key);
+                setStickers([]);
+              }}
+              draggable="false"
+            />
+          );
+        })}
 
         {displayImages.length > 0 && STICKERS.length > 0 && (
           <>

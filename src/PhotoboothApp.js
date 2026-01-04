@@ -4,13 +4,17 @@ import { X } from "lucide-react";
 // Import images
 import bg from "./images/backgrounds/bg.jpg";
 
-import smiskiTheme from "./images/themes/smiskiTheme.png";
-import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.png";
-import miffyTheme from "./images/themes/miffyTheme.png";
-import strawberryTheme from "./images/themes/strawberryTheme.png";
+import smiskiTheme from "./images/themes/smiskiTheme.jpg";
+import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.jpg";
+import miffyTheme from "./images/themes/miffyTheme.jpg";
+import strawberryTheme from "./images/themes/strawberryTheme.jpg";
 import whiteTheme from "./images/themes/whiteTheme.jpg";
 import blackTheme from "./images/themes/blackTheme.png";
 import yellowTheme from "./images/themes/yellowTheme.png";
+
+import smiskiOverlay from "./images/themes/smiskiOverlay.png";
+import sonnyAngelOverlay from "./images/themes/sonnyAngelOverlay.png";
+import miffyCupcakeOverlay from "./images/themes/miffyCupcakeOverlay.png";
 
 // Import button images
 import heartButton from "./images/buttons/heart-button.png";
@@ -58,6 +62,12 @@ const THEMES = {
     photoLeft: 27,
     photoTop: 35,
     photoSpacing: 16,
+    overlay: {
+      image: smiskiOverlay,
+      width: 135,
+      x: 150,
+      y: 600,
+    },
   },
   sonnyAngel: {
     name: "Sonny Angel",
@@ -73,6 +83,12 @@ const THEMES = {
     photoLeft: 24,
     photoTop: 40,
     photoSpacing: 19,
+    overlay: {
+      image: sonnyAngelOverlay,
+      width: 130,
+      x: 103,
+      y: 412,
+    },
   },
   miffy: {
     name: "Miffy",
@@ -88,6 +104,12 @@ const THEMES = {
     photoLeft: 31,
     photoTop: 68,
     photoSpacing: 25,
+    overlay: {
+      image: miffyCupcakeOverlay,
+      width: 206,
+      x: -8,
+      y: 616,
+    },
   },
   strawberry: {
     name: "Strawberry",
@@ -266,40 +288,11 @@ export default function PhotoboothApp() {
             return display;
           })();
 
-    // For white theme, draw frame first, then photos on top
-    if (themeKey === "white") {
-      const themeImg = new Image();
-      themeImg.onload = () => {
-        ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
+    // Draw frame first, then photos on top
+    const themeImg = new Image();
+    themeImg.onload = () => {
+      ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
 
-        const photoPromises = displayImages.map((src, idx) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-              const x = config.photoLeft * scale;
-              const y =
-                (config.photoTop +
-                  idx * (config.photoHeight + config.photoSpacing)) *
-                scale;
-              const width = config.photoWidth * scale;
-              const height = config.photoHeight * scale;
-
-              ctx.imageSmoothingEnabled = true;
-              ctx.imageSmoothingQuality = "high";
-              ctx.drawImage(img, x, y, width, height);
-              resolve();
-            };
-            img.src = src;
-          });
-        });
-
-        Promise.all(photoPromises).then(() => {
-          setCompositeImage(canvas.toDataURL());
-        });
-      };
-      themeImg.src = config.image;
-    } else {
-      // For all other themes, draw photos first, then frame on top
       const photoPromises = displayImages.map((src, idx) => {
         return new Promise((resolve) => {
           const img = new Image();
@@ -322,14 +315,36 @@ export default function PhotoboothApp() {
       });
 
       Promise.all(photoPromises).then(() => {
-        const themeImg = new Image();
-        themeImg.onload = () => {
-          ctx.drawImage(themeImg, 0, 0, displayWidth, displayHeight);
+        // Draw overlay if it exists
+        if (config.overlay) {
+          const overlayImg = new Image();
+          overlayImg.onload = () => {
+            const overlayWidth =
+              (config.overlay.width / config.frameWidth) * displayWidth;
+            const overlayHeight =
+              (overlayImg.height / overlayImg.width) * overlayWidth;
+
+            const overlayX =
+              (config.overlay.x / config.frameWidth) * displayWidth;
+            const overlayY =
+              (config.overlay.y / config.frameHeight) * displayHeight;
+
+            ctx.drawImage(
+              overlayImg,
+              overlayX,
+              overlayY,
+              overlayWidth,
+              overlayHeight
+            );
+            setCompositeImage(canvas.toDataURL());
+          };
+          overlayImg.src = config.overlay.image;
+        } else {
           setCompositeImage(canvas.toDataURL());
-        };
-        themeImg.src = config.image;
+        }
       });
-    }
+    };
+    themeImg.src = config.image;
   };
 
   const getDisplayImages = () => {
@@ -407,84 +422,12 @@ export default function PhotoboothApp() {
 
     const displayImages = getDisplayImages();
 
-    // For white theme, draw frame first, then photos on top
-    if (theme === "white") {
-      const themeImg = new Image();
-      themeImg.crossOrigin = "anonymous";
-      themeImg.onload = () => {
-        ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
+    // Draw frame first, then photos on top
+    const themeImg = new Image();
+    themeImg.crossOrigin = "anonymous";
+    themeImg.onload = () => {
+      ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
 
-        const photoPromises = displayImages.map((src, idx) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = () => {
-              const y =
-                (config.photoTop +
-                  idx * (config.photoHeight + config.photoSpacing)) *
-                outputScale;
-              ctx.drawImage(
-                img,
-                config.photoLeft * outputScale,
-                y,
-                config.photoWidth * outputScale,
-                config.photoHeight * outputScale
-              );
-              resolve();
-            };
-            img.src = src;
-          });
-        });
-
-        Promise.all(photoPromises).then(() => {
-          const stickerPromises = stickers.map((sticker) => {
-            return new Promise((resolve) => {
-              const stickerImg = new Image();
-              stickerImg.crossOrigin = "anonymous";
-              stickerImg.onload = () => {
-                const x = (sticker.x / 100) * canvas.width;
-                const y = (sticker.y / 100) * canvas.height;
-                const size = (sticker.size / 150) * 195 * outputScale;
-
-                const imgAspect = stickerImg.width / stickerImg.height;
-                let drawWidth = size;
-                let drawHeight = size;
-
-                if (imgAspect > 1) {
-                  drawHeight = size / imgAspect;
-                } else if (imgAspect < 1) {
-                  drawWidth = size * imgAspect;
-                }
-
-                ctx.drawImage(
-                  stickerImg,
-                  x - drawWidth / 2,
-                  y - drawHeight / 2,
-                  drawWidth,
-                  drawHeight
-                );
-                resolve();
-              };
-              stickerImg.onerror = () => resolve();
-              stickerImg.src = sticker.image;
-            });
-          });
-
-          Promise.all(stickerPromises).then(() => {
-            canvas.toBlob((blob) => {
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "photostrip.png";
-              a.click();
-              URL.revokeObjectURL(url);
-            }, "image/png");
-          });
-        });
-      };
-      themeImg.src = config.image;
-    } else {
-      // For all other themes, draw photos first, then frame on top
       const photoPromises = displayImages.map((src, idx) => {
         return new Promise((resolve) => {
           const img = new Image();
@@ -508,11 +451,38 @@ export default function PhotoboothApp() {
       });
 
       Promise.all(photoPromises).then(() => {
-        const themeImg = new Image();
-        themeImg.crossOrigin = "anonymous";
-        themeImg.onload = () => {
-          ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
+        const drawOverlayAndStickers = () => {
+          // Draw overlay if it exists
+          if (config.overlay) {
+            const overlayImg = new Image();
+            overlayImg.crossOrigin = "anonymous";
+            overlayImg.onload = () => {
+              const overlayWidth = config.overlay.width * outputScale;
+              const overlayHeight =
+                (overlayImg.height / overlayImg.width) * overlayWidth;
 
+              const overlayX = config.overlay.x * outputScale;
+              const overlayY = config.overlay.y * outputScale;
+
+              ctx.drawImage(
+                overlayImg,
+                overlayX,
+                overlayY,
+                overlayWidth,
+                overlayHeight
+              );
+
+              // Then draw stickers
+              drawStickers();
+            };
+            overlayImg.src = config.overlay.image;
+          } else {
+            // No overlay, just draw stickers
+            drawStickers();
+          }
+        };
+
+        const drawStickers = () => {
           const stickerPromises = stickers.map((sticker) => {
             return new Promise((resolve) => {
               const stickerImg = new Image();
@@ -557,9 +527,11 @@ export default function PhotoboothApp() {
             }, "image/png");
           });
         };
-        themeImg.src = config.image;
+
+        drawOverlayAndStickers();
       });
-    }
+    };
+    themeImg.src = config.image;
   };
 
   const displayImages = getDisplayImages();

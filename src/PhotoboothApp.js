@@ -8,6 +8,8 @@ import smiskiTheme from "./images/themes/smiskiTheme.png";
 import sonnyAngelTheme from "./images/themes/sonnyAngelTheme.png";
 import miffyTheme from "./images/themes/miffyTheme.png";
 import strawberryTheme from "./images/themes/strawberryTheme.png";
+import whiteTheme from "./images/themes/whiteTheme.png";
+import blackTheme from "./images/themes/blackTheme.png";
 
 // Import button images
 import heartButton from "./images/buttons/heart-button.png";
@@ -16,19 +18,25 @@ import smiskiButton from "./images/buttons/smiski-button.png";
 import sonnyAngelButton from "./images/buttons/sonnyAngel-button.png";
 import miffyButton from "./images/buttons/miffy-button.png";
 import strawberryButton from "./images/buttons/strawberry-button.png";
+// import whiteButton from "./images/buttons/white-button.png";
+// import blackButton from "./images/buttons/black-button.png";
 
 import sticker1 from "./images/stickers/smiskiSticker.png";
-import sticker2 from "./images/stickers/smiskiSticker.png";
-import sticker3 from "./images/stickers/smiskiSticker.png";
-import sticker4 from "./images/stickers/smiskiSticker.png";
-import sticker5 from "./images/stickers/smiskiSticker.png";
-import sticker6 from "./images/stickers/smiskiSticker.png";
-import sticker7 from "./images/stickers/smiskiSticker.png";
-import sticker8 from "./images/stickers/smiskiSticker.png";
-import sticker9 from "./images/stickers/smiskiSticker.png";
-import sticker10 from "./images/stickers/smiskiSticker.png";
-import sticker11 from "./images/stickers/smiskiSticker.png";
-import sticker12 from "./images/stickers/smiskiSticker.png";
+import sticker2 from "./images/stickers/pandaSonnyAngelSticker.png";
+import sticker3 from "./images/stickers/strawberrySonnyAngelSticker.png";
+import sticker4 from "./images/stickers/miffyCakeSticker.png";
+import sticker5 from "./images/stickers/croissantSticker.png";
+import sticker6 from "./images/stickers/campusLifeSticker.png";
+import sticker7 from "./images/stickers/miffySticker.png";
+import sticker8 from "./images/stickers/smiskiSwirlCakeSticker.png";
+import sticker9 from "./images/stickers/miffyCupcakeSticker.png";
+import sticker10 from "./images/stickers/miffyIllinoisSticker.png";
+import sticker11 from "./images/stickers/heartSticker.png";
+import sticker12 from "./images/stickers/sunnyDaysSticker.png";
+import sticker13 from "./images/stickers/starSticker.png";
+import sticker14 from "./images/stickers/cakeSticker.png";
+import sticker15 from "./images/stickers/cakeSliceSticker.png";
+import sticker16 from "./images/stickers/matchaThoughtsSticker.png";
 
 import backButton from "./images/buttons/back-button.png";
 import downloadButton from "./images/buttons/download-button.png";
@@ -82,21 +90,49 @@ const THEMES = {
     photoTop: 73,
     photoSpacing: 25,
   },
+  white: {
+    name: "White",
+    image: whiteTheme,
+    buttonImage: strawberryButton, // whiteButton
+    frameWidth: 220,
+    frameHeight: 700,
+    photoWidth: 180,
+    photoHeight: 130,
+    photoLeft: 20,
+    photoTop: 20,
+    photoSpacing: 20,
+  },
+  black: {
+    name: "Black",
+    image: blackTheme,
+    buttonImage: strawberryButton, // blackButton
+    frameWidth: 220,
+    frameHeight: 700,
+    photoWidth: 180,
+    photoHeight: 130,
+    photoLeft: 20,
+    photoTop: 20,
+    photoSpacing: 20,
+  },
 };
 
 const STICKERS = [
-  sticker1,
-  sticker2,
-  sticker3,
-  sticker4,
-  sticker5,
-  sticker6,
-  sticker7,
-  sticker8,
-  sticker9,
-  sticker10,
-  sticker11,
-  sticker12,
+  { src: sticker1, width: 40, left: 75, top: 510, rotation: -20 },
+  { src: sticker2, width: 50, left: 140, top: 520, rotation: 10 },
+  { src: sticker3, width: 50, left: 200, top: 510, rotation: -8 },
+  { src: sticker4, width: 60, left: 260, top: 520, rotation: 0 },
+  { src: sticker5, width: 70, left: 310, top: 500, rotation: 0 },
+  { src: sticker6, width: 80, left: 360, top: 500, rotation: 0 },
+  { src: sticker7, width: 60, left: 480, top: 497, rotation: -10 },
+  { src: sticker8, width: 70, left: 75, top: 600, rotation: 0 },
+  { src: sticker9, width: 60, left: 220, top: 600, rotation: 0 },
+  { src: sticker10, width: 60, left: 320, top: 570, rotation: -10 },
+  { src: sticker11, width: 40, left: 440, top: 500, rotation: 0 },
+  { src: sticker12, width: 100, left: 450, top: 660, rotation: 0 },
+  { src: sticker13, width: 40, left: 435, top: 560, rotation: 0 },
+  { src: sticker14, width: 65, left: 150, top: 610, rotation: 0 },
+  { src: sticker15, width: 60, left: 280, top: 645, rotation: 0 },
+  { src: sticker16, width: 100, left: 83, top: 660, rotation: 0 },
 ];
 
 export default function PhotoboothApp() {
@@ -122,7 +158,6 @@ export default function PhotoboothApp() {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
 
-            // Use 3x resolution for better quality
             const targetWidth = currentThemeConfig.photoWidth * 3;
             const targetHeight = currentThemeConfig.photoHeight * 3;
             canvas.width = targetWidth;
@@ -146,7 +181,6 @@ export default function PhotoboothApp() {
               offsetY = -(drawHeight - targetHeight) / 2;
             }
 
-            // Enable image smoothing for better quality
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = "high";
 
@@ -177,7 +211,6 @@ export default function PhotoboothApp() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Render preview at 2x resolution for crisp display
     const previewScale = 2;
     const displayWidth = 222 * previewScale;
     const displayHeight =
@@ -252,8 +285,10 @@ export default function PhotoboothApp() {
 
     setStickers([
       ...stickers,
-      { image: selectedSticker, x, y, id: Date.now(), size: 150 },
+      { image: selectedSticker.src, x, y, id: Date.now(), size: 150 },
     ]);
+
+    setSelectedSticker(null);
   };
 
   const removeSticker = (e, id) => {
@@ -293,7 +328,6 @@ export default function PhotoboothApp() {
 
     const config = THEMES[theme];
 
-    // Use 3x resolution for high quality output
     const outputScale = 3;
     canvas.width = config.frameWidth * outputScale;
     canvas.height = config.frameHeight * outputScale;
@@ -397,7 +431,6 @@ export default function PhotoboothApp() {
         className="max-w-full mx-auto relative"
         style={{ height: "100vh", overflow: "hidden" }}
       >
-        {/* Heart Button - positioned at (150, 100) */}
         <div className="absolute" style={{ left: "135px", top: "150px" }}>
           <input
             type="file"
@@ -435,67 +468,71 @@ export default function PhotoboothApp() {
           </p>
         )}
 
-        {/* Theme Buttons - moved down 130 pixels to (100, 290) */}
         <div
           className="absolute flex gap-0"
           style={{ left: "80px", top: "320px" }}
         >
-          {Object.entries(THEMES).map(([key, t], index) => (
-            <img
-              key={key}
-              src={t.buttonImage}
-              alt={t.name}
-              className={`cursor-pointer transition-all ${
-                theme === key ? "scale-110 drop-shadow-2xl" : "hover:scale-105"
-              }`}
-              style={{
-                width: "auto",
-                height: "50px",
-                marginLeft: index === 0 ? "0" : "50px",
-              }}
-              onClick={() => {
-                setTheme(key);
-                setStickers([]);
-              }}
-              draggable="false"
-            />
-          ))}
+          {Object.entries(THEMES).map(([key, t], index) => {
+            if (!t.buttonImage) return null;
+            return (
+              <img
+                key={key}
+                src={t.buttonImage}
+                alt={t.name}
+                className={`cursor-pointer transition-all ${
+                  theme === key
+                    ? "scale-110 drop-shadow-2xl"
+                    : "hover:scale-105"
+                }`}
+                style={{
+                  width: "auto",
+                  height: "50px",
+                  marginLeft: index === 0 ? "0" : "50px",
+                }}
+                onClick={() => {
+                  setTheme(key);
+                  setStickers([]);
+                }}
+                draggable="false"
+              />
+            );
+          })}
         </div>
 
-        {/* Stickers Section */}
         {displayImages.length > 0 && STICKERS.length > 0 && (
-          <div
-            className="absolute rounded-3xl p-6"
-            style={{ left: "60px", top: "520px", width: "500px" }}
-          >
-            <div className="grid grid-cols-6 gap-2 mb-4">
-              {STICKERS.map((sticker, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedSticker(sticker)}
-                  className={`p-2 rounded-xl border-3 transition-all ${
-                    selectedSticker === sticker
-                      ? "border-purple-300 scale-110 border-4"
-                      : "border-gray-300 hover:bg-gray-100 border-2"
-                  }`}
-                >
-                  <img
-                    src={sticker}
-                    alt={`Sticker ${idx + 1}`}
-                    className="w-full h-10 object-contain"
-                  />
-                </button>
-              ))}
-            </div>
+          <>
+            {STICKERS.map((sticker, idx) => (
+              <img
+                key={idx}
+                src={sticker.src}
+                alt={`Sticker ${idx + 1}`}
+                onClick={() => setSelectedSticker(sticker)}
+                className={`absolute cursor-pointer transition-all ${
+                  selectedSticker === sticker
+                    ? "drop-shadow-[0_0_15px_rgba(34,197,94,0.8)]"
+                    : "hover:drop-shadow-lg"
+                }`}
+                style={{
+                  left: `${sticker.left}px`,
+                  top: `${sticker.top}px`,
+                  width: `${sticker.width}px`,
+                  height: "auto",
+                  transform: `rotate(${sticker.rotation}deg)`,
+                }}
+                draggable="false"
+              />
+            ))}
             {selectedSticker && (
-              <p className="text-center text-sm text-gray-600 font-medium">
+              <p
+                className="absolute text-center text-sm text-gray-600 font-medium"
+                style={{ left: "60px", top: "760px", width: "440px" }}
+              >
                 Click on the strip to add sticker
               </p>
             )}
-          </div>
+          </>
         )}
 
-        {/* Download Button */}
         {displayImages.length > 0 && (
           <img
             src={downloadButton}
@@ -512,7 +549,6 @@ export default function PhotoboothApp() {
           />
         )}
 
-        {/* Preview Section - removed "Preview" text */}
         <div
           className="absolute flex flex-col items-center"
           style={{ right: "70px", top: "20px" }}
@@ -590,7 +626,6 @@ export default function PhotoboothApp() {
           )}
         </div>
 
-        {/* Back Button */}
         <button
           onClick={() => (window.location.href = "/")}
           className="absolute"

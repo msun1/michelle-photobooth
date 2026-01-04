@@ -347,7 +347,7 @@ const STICKERS = [
     left: 430,
     top: 640,
     rotation: 0,
-    printSize: 150, // happy
+    printSize: 200, // happy
   },
 ];
 
@@ -799,9 +799,9 @@ export default function PhotoboothApp() {
             {selectedSticker && (
               <p
                 className="absolute text-center text-sm text-gray-600 font-medium"
-                style={{ left: "60px", top: "760px", width: "440px" }}
+                style={{ left: "110px", top: "730px", width: "440px" }}
               >
-                Click on the strip to add sticker
+                click on the strip to add sticker
               </p>
             )}
           </>
@@ -874,12 +874,12 @@ export default function PhotoboothApp() {
                       style={{ userSelect: "none" }}
                     />
                     <button
-                      className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute -top-0 -right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => removeSticker(e, sticker.id)}
                       onMouseDown={(e) => e.stopPropagation()}
                       style={{ pointerEvents: "auto" }}
                     >
-                      <X size={14} />
+                      <X size={13} />
                     </button>
                   </div>
                 ))}
@@ -894,7 +894,7 @@ export default function PhotoboothApp() {
               }}
             >
               <p className="text-gray-400 font-bold text-center px-4">
-                Upload photos to see your strip!
+                upload photos to see your strip
               </p>
             </div>
           )}

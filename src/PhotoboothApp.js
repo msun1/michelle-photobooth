@@ -27,6 +27,9 @@ import whiteButton from "./images/buttons/white-button.png";
 import blackButton from "./images/buttons/black-button.png";
 import yellowButton from "./images/buttons/yellow-button.png";
 
+import takePicButton from "./images/buttons/takepics-button.png";
+import takePicButtonDown from "./images/buttons/takepics-button-down.png";
+
 import sticker1 from "./images/stickers/smiskiSticker.png";
 import sticker2 from "./images/stickers/pandaSonnyAngelSticker.png";
 import sticker3 from "./images/stickers/strawberrySonnyAngelSticker.png";
@@ -353,6 +356,10 @@ const STICKERS = [
 
 export default function PhotoboothApp() {
   const [images, setImages] = useState([]);
+  const [isTakePicPressed, setIsTakePicPressed] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraPhotos, setCameraPhotos] = useState([]);
+  const [stream, setStream] = useState(null);
   const [theme, setTheme] = useState("smiski");
   const [stickers, setStickers] = useState([]);
   const [selectedSticker, setSelectedSticker] = useState(null);
@@ -360,6 +367,8 @@ export default function PhotoboothApp() {
   const [isHeartPressed, setIsHeartPressed] = useState(false);
   const stripRef = useRef(null);
   const fileInputRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files).slice(0, 4);
@@ -414,6 +423,98 @@ export default function PhotoboothApp() {
       setStickers([]);
       generateCompositeImage(results, theme);
     });
+  };
+
+  const startCamera = async () => {
+    // console.log("startCamera called");
+    try {
+      // console.log("Requesting camera access...");
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 1280, height: 720 },
+      });
+      // console.log("Camera access granted", mediaStream);
+      setStream(mediaStream);
+      setShowCamera(true);
+      setCameraPhotos([]);
+
+      // Add a small delay to ensure video element is rendered
+      setTimeout(() => {
+        if (videoRef.current) {
+          // console.log("Setting video source");
+          videoRef.current.srcObject = mediaStream;
+        } else {
+          console.log("videoRef.current is null!");
+        }
+      }, 100);
+    } catch (err) {
+      console.error("Error accessing camera:", err);
+      alert(
+        "Unable to access camera. Please check permissions. Error: " +
+          err.message
+      );
+    }
+  };
+
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+    }
+    setShowCamera(false);
+  };
+
+  const takePhoto = () => {
+    if (!videoRef.current || !canvasRef.current || cameraPhotos.length >= 4)
+      return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const currentThemeConfig = THEMES[theme];
+    const targetWidth = currentThemeConfig.photoWidth * 3;
+    const targetHeight = currentThemeConfig.photoHeight * 3;
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+
+    const videoAspect = video.videoWidth / video.videoHeight;
+    const targetAspect = targetWidth / targetHeight;
+
+    let drawWidth,
+      drawHeight,
+      offsetX = 0,
+      offsetY = 0;
+
+    if (videoAspect > targetAspect) {
+      drawHeight = targetHeight;
+      drawWidth = videoAspect * drawHeight;
+      offsetX = -(drawWidth - targetWidth) / 2;
+    } else {
+      drawWidth = targetWidth;
+      drawHeight = drawWidth / videoAspect;
+      offsetY = -(drawHeight - targetHeight) / 2;
+    }
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+
+    const photoData = canvas.toDataURL("image/jpeg", 0.95);
+    const newPhotos = [...cameraPhotos, photoData];
+    setCameraPhotos(newPhotos);
+
+    if (newPhotos.length === 4) {
+      setImages(newPhotos);
+      setStickers([]);
+      generateCompositeImage(newPhotos, theme);
+      stopCamera();
+    }
+  };
+
+  const cancelCamera = () => {
+    stopCamera();
+    setCameraPhotos([]);
   };
 
   React.useEffect(() => {
@@ -711,7 +812,8 @@ export default function PhotoboothApp() {
         className="max-w-full mx-auto relative"
         style={{ height: "100vh", overflow: "hidden" }}
       >
-        <div className="absolute" style={{ left: "135px", top: "150px" }}>
+        {/* heart button div */}
+        <div className="absolute" style={{ left: "270px", top: "150px" }}>
           <input
             type="file"
             ref={fileInputRef}
@@ -729,6 +831,21 @@ export default function PhotoboothApp() {
             onMouseDown={() => setIsHeartPressed(true)}
             onMouseUp={() => setIsHeartPressed(false)}
             onMouseLeave={() => setIsHeartPressed(false)}
+            draggable="false"
+          />
+        </div>
+
+        {/* camera button div */}
+        <div className="absolute" style={{ left: "105px", top: "155px" }}>
+          <img
+            src={isTakePicPressed ? takePicButtonDown : takePicButton}
+            alt="Take Photos"
+            className="cursor-pointer transition-transform active:scale-95"
+            style={{ width: "110px", height: "auto" }}
+            onClick={startCamera}
+            onMouseDown={() => setIsTakePicPressed(true)}
+            onMouseUp={() => setIsTakePicPressed(false)}
+            onMouseLeave={() => setIsTakePicPressed(false)}
             draggable="false"
           />
         </div>
@@ -913,6 +1030,48 @@ export default function PhotoboothApp() {
             draggable="false"
           />
         </button>
+
+        {showCamera && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center"
+            style={{ zIndex: 1000 }}
+          >
+            <div className="relative bg-white rounded-lg p-6 max-w-4xl">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="w-full max-w-2xl rounded-lg"
+              />
+              <canvas ref={canvasRef} className="hidden" />
+              <div className="mt-4 flex gap-4 justify-center items-center">
+                <button
+                  onClick={takePhoto}
+                  disabled={cameraPhotos.length >= 4}
+                  className="px-6 py-3 bg-pink-400 hover:bg-pink-600 disabled:bg-gray-300 text-white rounded-lg transition-colors"
+                >
+                  ☆ take photo ☆ ({cameraPhotos.length}/4)
+                </button>
+                <button
+                  onClick={cancelCamera}
+                  className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                >
+                  ☆ cancel ☆
+                </button>
+              </div>
+              <div className="mt-4 flex gap-2 justify-center">
+                {cameraPhotos.map((photo, idx) => (
+                  <img
+                    key={idx}
+                    src={photo}
+                    alt={`Photo ${idx + 1}`}
+                    className="w-20 h-20 object-cover rounded border-2 border-pink-500"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

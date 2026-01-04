@@ -47,6 +47,8 @@ import sticker17 from "./images/stickers/butterflySticker.png";
 import sticker18 from "./images/stickers/heartStickerSmall.png";
 import sticker19 from "./images/stickers/starStickerSmall.png";
 import sticker20 from "./images/stickers/butterflySticker.png";
+import sticker21 from "./images/stickers/highonlifeSticker.png";
+import sticker22 from "./images/stickers/happySticker.png";
 
 import backButton from "./images/buttons/back-button.png";
 import downloadButton from "./images/buttons/download-button.png";
@@ -301,9 +303,9 @@ const STICKERS = [
   },
   {
     src: sticker17,
-    width: 60,
+    width: 50,
     left: 384,
-    top: 590,
+    top: 656,
     rotation: 0,
     printSize: 100, // butterfly
   },
@@ -318,8 +320,8 @@ const STICKERS = [
   {
     src: sticker19,
     width: 20,
-    left: 520,
-    top: 610,
+    left: 250,
+    top: 510,
     rotation: 0,
     printSize: 50, // small star
   },
@@ -330,6 +332,22 @@ const STICKERS = [
     top: 670,
     rotation: 0,
     printSize: 50, // small butterfly
+  },
+  {
+    src: sticker21,
+    width: 140,
+    left: 400,
+    top: 605,
+    rotation: 0,
+    printSize: 200, // high on life
+  },
+  {
+    src: sticker22,
+    width: 115,
+    left: 430,
+    top: 640,
+    rotation: 0,
+    printSize: 150, // happy
   },
 ];
 

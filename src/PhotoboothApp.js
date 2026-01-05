@@ -56,6 +56,10 @@ import sticker22 from "./images/stickers/happySticker.png";
 import backButton from "./images/buttons/back-button.png";
 import downloadButton from "./images/buttons/download-button.png";
 
+// actual bg image dimensions !!
+const BG_WIDTH = 2004;
+const BG_HEIGHT = 1194;
+
 const THEMES = {
   smiski: {
     name: "Smiski",
@@ -63,7 +67,7 @@ const THEMES = {
     buttonImage: smiskiButton,
     buttonWidth: 60,
     buttonLeft: 81,
-    buttonTop: 315,
+    buttonTop: 460,
     frameWidth: 281,
     frameHeight: 881,
     photoWidth: 219,
@@ -84,7 +88,7 @@ const THEMES = {
     buttonImage: sonnyAngelButton,
     buttonWidth: 110,
     buttonLeft: 230,
-    buttonTop: 315,
+    buttonTop: 470,
     frameWidth: 228,
     frameHeight: 719,
     photoWidth: 177,
@@ -105,7 +109,7 @@ const THEMES = {
     buttonImage: miffyButton,
     buttonWidth: 60,
     buttonLeft: 420,
-    buttonTop: 315,
+    buttonTop: 440,
     frameWidth: 281,
     frameHeight: 886,
     photoWidth: 217,
@@ -126,7 +130,7 @@ const THEMES = {
     buttonImage: strawberryButton,
     buttonWidth: 140,
     buttonLeft: 140,
-    buttonTop: 380,
+    buttonTop: 550,
     frameWidth: 280,
     frameHeight: 879,
     photoWidth: 215,
@@ -141,7 +145,7 @@ const THEMES = {
     buttonImage: whiteButton,
     buttonWidth: 70,
     buttonLeft: 580,
-    buttonTop: 315,
+    buttonTop: 430,
     frameWidth: 421,
     frameHeight: 1316,
     photoWidth: 320,
@@ -156,7 +160,7 @@ const THEMES = {
     buttonImage: blackButton,
     buttonWidth: 70,
     buttonLeft: 364,
-    buttonTop: 374,
+    buttonTop: 530,
     frameWidth: 283,
     frameHeight: 881,
     photoWidth: 217,
@@ -171,7 +175,7 @@ const THEMES = {
     buttonImage: yellowButton,
     buttonWidth: 70,
     buttonLeft: 510,
-    buttonTop: 370,
+    buttonTop: 520,
     frameWidth: 282,
     frameHeight: 883,
     photoWidth: 217,
@@ -185,170 +189,177 @@ const THEMES = {
 const STICKERS = [
   {
     src: sticker1,
-    width: 40,
-    left: 75,
-    top: 510,
+    width: 55,
+    left: 110,
+    top: 790,
     rotation: -20,
     printSize: 150, // smiski
   },
   {
     src: sticker2,
-    width: 50,
-    left: 140,
-    top: 520,
+    width: 70,
+    left: 180,
+    top: 790,
     rotation: 10,
-    printSize: 150, // panda sonny angel
+    printSize: 150, // sonny angel
   },
   {
     src: sticker3,
-    width: 50,
-    left: 200,
-    top: 510,
+    width: 70,
+    left: 250,
+    top: 770,
     rotation: -8,
     printSize: 150, // strawberry sonny angel
   },
   {
     src: sticker4,
-    width: 60,
-    left: 260,
-    top: 520,
+    width: 70,
+    left: 304,
+    top: 840,
     rotation: 0,
     printSize: 150, // miffy cake
   },
   {
     src: sticker5,
-    width: 70,
-    left: 310,
-    top: 500,
+    width: 90,
+    left: 350,
+    top: 770,
     rotation: 0,
     printSize: 100, // croissant
   },
   {
     src: sticker6,
-    width: 80,
-    left: 360,
-    top: 500,
+    width: 100,
+    left: 390,
+    top: 790,
     rotation: 0,
     printSize: 150, // campus life
   },
   {
     src: sticker7,
-    width: 60,
-    left: 480,
-    top: 497,
+    width: 70,
+    left: 630,
+    top: 760,
     rotation: -10,
     printSize: 150, // miffy
   },
-  { src: sticker8, width: 70, left: 75, top: 600, rotation: 0, printSize: 100 }, // smiski swirl cake
+  {
+    src: sticker8,
+    width: 100,
+    left: 100,
+    top: 940,
+    rotation: 0,
+    printSize: 100,
+  }, // smiski swirl cake
   {
     src: sticker9,
-    width: 60,
+    width: 90,
     left: 220,
-    top: 600,
+    top: 920,
     rotation: 0,
     printSize: 100, // miffy cupcake
   },
   {
     src: sticker10,
-    width: 60,
-    left: 320,
-    top: 570,
+    width: 80,
+    left: 380,
+    top: 930,
     rotation: -10,
     printSize: 150, // miffy illinois
   },
   {
     src: sticker11,
-    width: 40,
+    width: 50,
     left: 440,
-    top: 500,
+    top: 920,
     rotation: 0,
     printSize: 100, // heart
   },
   {
     src: sticker12,
-    width: 100,
-    left: 450,
-    top: 660,
+    width: 120,
+    left: 605,
+    top: 990,
     rotation: 0,
     printSize: 150, // sunny days
   },
   {
     src: sticker13,
-    width: 40,
-    left: 435,
-    top: 560,
+    width: 50,
+    left: 460,
+    top: 865,
     rotation: 0,
     printSize: 100, // star
   },
   {
     src: sticker14,
-    width: 65,
-    left: 150,
-    top: 610,
+    width: 80,
+    left: 500,
+    top: 740,
     rotation: 0,
     printSize: 80, // cake
   },
   {
     src: sticker15,
-    width: 60,
-    left: 280,
-    top: 645,
+    width: 70,
+    left: 560,
+    top: 815,
     rotation: 0,
     printSize: 80, // cake slice
   },
   {
     src: sticker16,
     width: 100,
-    left: 83,
-    top: 660,
+    left: 110,
+    top: 1020,
     rotation: 0,
     printSize: 150, // matcha thoughts
   },
   {
     src: sticker17,
-    width: 50,
-    left: 384,
-    top: 656,
+    width: 70,
+    left: 460,
+    top: 980,
     rotation: 0,
     printSize: 100, // butterfly
   },
   {
     src: sticker18,
-    width: 20,
-    left: 350,
-    top: 660,
+    width: 40,
+    left: 310,
+    top: 760,
     rotation: 0,
-    printSize: 50, // small heart
+    printSize: 50, // heart small
   },
   {
     src: sticker19,
-    width: 20,
-    left: 250,
-    top: 510,
+    width: 40,
+    left: 320,
+    top: 1004,
     rotation: 0,
-    printSize: 50, // small star
+    printSize: 50, // star small
   },
   {
     src: sticker20,
     width: 40,
-    left: 190,
-    top: 670,
+    left: 443,
+    top: 742,
     rotation: 0,
-    printSize: 50, // small butterfly
+    printSize: 50, // butterfly small
   },
   {
     src: sticker21,
-    width: 140,
-    left: 400,
-    top: 605,
+    width: 170,
+    left: 530,
+    top: 900,
     rotation: 0,
     printSize: 200, // high on life
   },
   {
     src: sticker22,
-    width: 115,
-    left: 430,
-    top: 640,
+    width: 160,
+    left: 530,
+    top: 950,
     rotation: 0,
     printSize: 200, // happy
   },
@@ -369,6 +380,7 @@ export default function PhotoboothApp() {
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files).slice(0, 4);
@@ -426,21 +438,16 @@ export default function PhotoboothApp() {
   };
 
   const startCamera = async () => {
-    // console.log("startCamera called");
     try {
-      // console.log("Requesting camera access...");
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { width: 1280, height: 720 },
       });
-      // console.log("Camera access granted", mediaStream);
       setStream(mediaStream);
       setShowCamera(true);
       setCameraPhotos([]);
 
-      // Add a small delay to ensure video element is rendered
       setTimeout(() => {
         if (videoRef.current) {
-          // console.log("Setting video source");
           videoRef.current.srcObject = mediaStream;
         } else {
           console.log("videoRef.current is null!");
@@ -797,23 +804,27 @@ export default function PhotoboothApp() {
   const displayImages = getDisplayImages();
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center overflow-hidden"
-      style={{
-        backgroundImage: `url(${bg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 overflow-hidden">
       <div
-        className="max-w-full mx-auto relative"
-        style={{ height: "100vh", overflow: "hidden" }}
+        ref={containerRef}
+        className="relative bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${bg})`,
+          width: "100%",
+          // maxWidth: "1330px",
+          aspectRatio: `${BG_WIDTH} / ${BG_HEIGHT}`,
+          maxHeight: "100vh",
+        }}
       >
         {/* heart button div */}
-        <div className="absolute" style={{ left: "270px", top: "150px" }}>
+        <div
+          className="absolute"
+          style={{
+            left: `${(540 / BG_WIDTH) * 100}%`,
+            top: `${(210 / BG_HEIGHT) * 100}%`,
+            zIndex: 10,
+          }}
+        >
           <input
             type="file"
             ref={fileInputRef}
@@ -826,7 +837,10 @@ export default function PhotoboothApp() {
             src={isHeartPressed ? heartButtonDown : heartButton}
             alt="Upload Photos"
             className="cursor-pointer transition-transform active:scale-95"
-            style={{ width: "110px", height: "auto" }}
+            style={{
+              width: `${(450 / BG_WIDTH) * 100}%`,
+              height: "auto",
+            }}
             onClick={() => fileInputRef.current?.click()}
             onMouseDown={() => setIsHeartPressed(true)}
             onMouseUp={() => setIsHeartPressed(false)}
@@ -836,12 +850,21 @@ export default function PhotoboothApp() {
         </div>
 
         {/* camera button div */}
-        <div className="absolute" style={{ left: "105px", top: "155px" }}>
+        <div
+          className="absolute"
+          style={{
+            left: `${(135 / BG_WIDTH) * 100}%`,
+            top: `${(220 / BG_HEIGHT) * 100}%`,
+          }}
+        >
           <img
             src={isTakePicPressed ? takePicButtonDown : takePicButton}
             alt="Take Photos"
             className="cursor-pointer transition-transform active:scale-95"
-            style={{ width: "110px", height: "auto" }}
+            style={{
+              width: `${(450 / BG_WIDTH) * 100}%`,
+              height: "auto",
+            }}
             onClick={startCamera}
             onMouseDown={() => setIsTakePicPressed(true)}
             onMouseUp={() => setIsTakePicPressed(false)}
@@ -854,10 +877,10 @@ export default function PhotoboothApp() {
           <p
             className="absolute text-center text-white drop-shadow-lg font-bold"
             style={{
-              left: "260px",
-              top: "205px",
-              width: "100px",
-              fontSize: "13px",
+              left: `${(450 / BG_WIDTH) * 100}%`,
+              top: `${(320 / BG_HEIGHT) * 100}%`,
+              width: `${(400 / BG_WIDTH) * 100}%`,
+              fontSize: `${(20 / BG_HEIGHT) * 100}vh`,
               textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
             }}
           >
@@ -876,9 +899,9 @@ export default function PhotoboothApp() {
                 theme === key ? "scale-110 drop-shadow-2xl" : "hover:scale-105"
               }`}
               style={{
-                left: `${t.buttonLeft}px`,
-                top: `${t.buttonTop}px`,
-                width: `${t.buttonWidth}px`,
+                left: `${(t.buttonLeft / BG_WIDTH) * 100}%`,
+                top: `${(t.buttonTop / BG_HEIGHT) * 100}%`,
+                width: `${(t.buttonWidth / BG_WIDTH) * 100}%`,
                 height: "auto",
               }}
               onClick={() => {
@@ -904,9 +927,9 @@ export default function PhotoboothApp() {
                     : "hover:drop-shadow-lg"
                 }`}
                 style={{
-                  left: `${sticker.left}px`,
-                  top: `${sticker.top}px`,
-                  width: `${sticker.width}px`,
+                  left: `${(sticker.left / BG_WIDTH) * 100}%`,
+                  top: `${(sticker.top / BG_HEIGHT) * 100}%`,
+                  width: `${(sticker.width / BG_WIDTH) * 100}%`,
                   height: "auto",
                   transform: `rotate(${sticker.rotation}deg)`,
                 }}
@@ -916,7 +939,12 @@ export default function PhotoboothApp() {
             {selectedSticker && (
               <p
                 className="absolute text-center text-sm text-gray-600 font-medium"
-                style={{ left: "110px", top: "730px", width: "440px" }}
+                style={{
+                  left: `${(130 / BG_WIDTH) * 100}%`,
+                  top: `${(1090 / BG_HEIGHT) * 100}%`,
+                  width: `${(440 / BG_WIDTH) * 100}%`,
+                  fontSize: `${(16 / BG_HEIGHT) * 100}vh`,
+                }}
               >
                 click on the strip to add sticker
               </p>
@@ -931,10 +959,11 @@ export default function PhotoboothApp() {
             onClick={downloadStrip}
             className="absolute cursor-pointer transition-transform hover:scale-105 active:scale-95"
             style={{
-              left: "1050px",
-              bottom: "50px",
+              left: `${(1730 / BG_WIDTH) * 100}%`,
+              bottom: `${(70 / BG_HEIGHT) * 100}%`,
               width: "auto",
-              height: "100px",
+              height: `${(110 / BG_HEIGHT) * 100}%`,
+              zIndex: 10,
             }}
             draggable="false"
           />
@@ -942,7 +971,10 @@ export default function PhotoboothApp() {
 
         <div
           className="absolute flex flex-col items-center"
-          style={{ right: "70px", top: "20px" }}
+          style={{
+            right: `${(70 / BG_WIDTH) * 100}%`,
+            top: `${(20 / BG_HEIGHT) * 100}%`,
+          }}
         >
           {displayImages.length > 0 ? (
             <div className="relative">
@@ -951,11 +983,13 @@ export default function PhotoboothApp() {
                 onClick={handleStripClick}
                 className="relative shadow-2xl cursor-crosshair select-none"
                 style={{
-                  width: "222px",
+                  width: `${(1050 / BG_WIDTH) * 100}%`,
                   height: `${
-                    (THEMES[theme].frameHeight / THEMES[theme].frameWidth) * 222
-                  }px`,
-                  maxHeight: "100vh",
+                    (((THEMES[theme].frameHeight / THEMES[theme].frameWidth) *
+                      222) /
+                      BG_HEIGHT) *
+                    100
+                  }%`,
                 }}
               >
                 {compositeImage && (
@@ -1006,13 +1040,16 @@ export default function PhotoboothApp() {
             <div
               className="bg-gray-100 border-4 border-dashed border-gray-400 flex items-center justify-center"
               style={{
-                width: "222px",
-                height: "700px",
+                width: `${(2000 / BG_WIDTH) * 100}%`,
+                height: `${(10000 / BG_HEIGHT) * 100}%`,
               }}
             >
-              <p className="text-gray-400 font-bold text-center px-4">
+              {/* <p
+                className="text-gray-400 font-bold text-center px-4"
+                style={{ fontSize: `${(14 / BG_HEIGHT) * 100}vh` }}
+              >
                 upload photos to see your strip
-              </p>
+              </p> */}
             </div>
           )}
         </div>
@@ -1020,13 +1057,20 @@ export default function PhotoboothApp() {
         <button
           onClick={() => (window.location.href = "/")}
           className="absolute"
-          style={{ left: "40px", bottom: "10px" }}
+          style={{
+            left: `${(40 / BG_WIDTH) * 100}%`,
+            bottom: `${(20 / BG_HEIGHT) * 100}%`,
+            zIndex: 10,
+          }}
         >
           <img
             src={backButton}
             alt="Back to Home"
             className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
-            style={{ width: "120px", height: "auto" }}
+            style={{
+              width: `${(220 / BG_WIDTH) * 100}%`,
+              height: "auto",
+            }}
             draggable="false"
           />
         </button>

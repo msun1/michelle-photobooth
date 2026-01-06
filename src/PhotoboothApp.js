@@ -66,7 +66,7 @@ const THEMES = {
     image: smiskiTheme,
     buttonImage: smiskiButton,
     buttonWidth: 100,
-    buttonLeft: -20,
+    buttonLeft: 30,
     buttonTop: 460,
     frameWidth: 281,
     frameHeight: 881,
@@ -190,103 +190,103 @@ const STICKERS = [
   {
     src: sticker1,
     width: 55,
-    left: -10,
-    top: 790,
+    left: 110,
+    top: 760,
     rotation: -20,
-    printSize: 250,
+    printSize: 200,
   },
   {
     src: sticker2,
     width: 70,
-    left: 60,
-    top: 790,
+    left: 180,
+    top: 760,
     rotation: 10,
     printSize: 300,
   },
   {
     src: sticker3,
     width: 70,
-    left: 135,
-    top: 770,
+    left: 250,
+    top: 750,
     rotation: -8,
     printSize: 250,
   },
   {
     src: sticker4,
     width: 70,
-    left: 184,
+    left: 310,
     top: 840,
     rotation: 0,
-    printSize: 250,
+    printSize: 250, // cupcake
   },
   {
     src: sticker5,
     width: 90,
-    left: 220,
-    top: 770,
+    left: 360,
+    top: 750,
     rotation: 0,
-    printSize: 200,
+    printSize: 150, // croissant
   },
   {
     src: sticker6,
     width: 100,
-    left: 260,
-    top: 810,
+    left: 370,
+    top: 800,
     rotation: 0,
-    printSize: 250,
+    printSize: 250, // campus life
   },
   {
     src: sticker7,
     width: 70,
-    left: 630 - 120,
-    top: 760,
+    left: 630,
+    top: 730,
     rotation: -10,
-    printSize: 250,
+    printSize: 250, // miffy
   },
   {
     src: sticker8,
     width: 100,
-    left: 100 - 120,
+    left: 100,
     top: 940,
     rotation: 0,
-    printSize: 200,
+    printSize: 200, // swirl cake
   },
   {
     src: sticker9,
     width: 90,
-    left: 220 - 120,
-    top: 920,
+    left: 220,
+    top: 870,
     rotation: 0,
-    printSize: 200,
+    printSize: 200, // cupcake
   },
   {
     src: sticker10,
     width: 80,
-    left: 380 - 120,
-    top: 930,
+    left: 380,
+    top: 910,
     rotation: -10,
-    printSize: 250,
+    printSize: 250, // illinois
   },
   {
     src: sticker11,
-    width: 70,
-    left: 600,
-    top: 920,
+    width: 60,
+    left: 580,
+    top: 820,
     rotation: 0,
     printSize: 150, // heart
   },
   {
     src: sticker12,
     width: 120,
-    left: 605 - 120,
-    top: 990,
+    left: 605,
+    top: 970,
     rotation: 0,
-    printSize: 250,
+    printSize: 250, // sunny days
   },
   {
     src: sticker13,
-    width: 80,
-    left: 460 - 120,
+    width: 60,
+    left: 460,
     top: 865,
     rotation: 0,
     printSize: 150, // star
@@ -294,39 +294,39 @@ const STICKERS = [
   {
     src: sticker14,
     width: 80,
-    left: 500 - 120,
+    left: 530,
     top: 740,
     rotation: 0,
-    printSize: 180,
+    printSize: 150, // cake
   },
   {
     src: sticker15,
     width: 70,
-    left: 560 - 120,
+    left: 510,
     top: 815,
     rotation: 0,
-    printSize: 180,
+    printSize: 150, // cake slice
   },
   {
     src: sticker16,
     width: 100,
-    left: 110 - 120,
-    top: 1020,
+    left: 97,
+    top: 882,
     rotation: 0,
-    printSize: 250,
+    printSize: 250, // matcha thoughts
   },
   {
     src: sticker17,
     width: 90,
-    left: 460 - 120,
-    top: 980,
+    left: 450,
+    top: 930,
     rotation: 0,
     printSize: 150, // butterly
   },
   {
     src: sticker18,
     width: 40,
-    left: 310 - 120,
+    left: 310,
     top: 760,
     rotation: 0,
     printSize: 100, // small heart
@@ -334,15 +334,15 @@ const STICKERS = [
   {
     src: sticker19,
     width: 40,
-    left: 320 - 120,
-    top: 990,
+    left: 320,
+    top: 970,
     rotation: 0,
     printSize: 100, // small star
   },
   {
     src: sticker20,
     width: 60,
-    left: 443 - 140,
+    left: 443,
     top: 742,
     rotation: 0,
     printSize: 100, // small butterfly
@@ -350,25 +350,25 @@ const STICKERS = [
   {
     src: sticker21,
     width: 170,
-    left: 530 - 120,
+    left: 530,
     top: 900,
     rotation: 0,
-    printSize: 300,
+    printSize: 250,
   },
   {
     src: sticker22,
     width: 160,
-    left: 530 - 120,
+    left: 530,
     top: 950,
     rotation: 0,
-    printSize: 300,
+    printSize: 250,
   },
 ];
 
 // Photostrip positioned at x: 1884 (right edge), y: 20 in original bg coordinates
-const STRIP_RIGHT = 70; // distance from right edge
-const STRIP_TOP = 40;
-const STRIP_WIDTH = 350; // base display width
+const STRIP_RIGHT = 160; // distance from right edge
+const STRIP_TOP = 107;
+const STRIP_WIDTH = 300; // base display width
 
 export default function PhotoboothApp() {
   const [images, setImages] = useState([]);
@@ -803,7 +803,7 @@ export default function PhotoboothApp() {
                 const x = (sticker.x / 100) * canvas.width;
                 const y = (sticker.y / 100) * canvas.height;
                 // const size = (sticker.size / 150) * 195 * outputScale;
-                const size = sticker.size * 0.83 * outputScale;
+                const size = sticker.size * 0.9 * outputScale;
 
                 const imgAspect = stickerImg.width / stickerImg.height;
                 let drawWidth = size;
@@ -862,7 +862,7 @@ export default function PhotoboothApp() {
         style={{
           backgroundImage: `url(${bg})`,
           width: "100%",
-          height: "100%",
+          // height: "100%",
           maxWidth: `${BG_WIDTH}px`,
           maxHeight: `${BG_HEIGHT}px`,
           aspectRatio: `${BG_WIDTH} / ${BG_HEIGHT}`,
@@ -873,8 +873,8 @@ export default function PhotoboothApp() {
         <div
           className="absolute"
           style={{
-            left: `${bgOffset.x + 370 * scale}px`,
-            top: `${bgOffset.y + 210 * scale}px`,
+            left: `${bgOffset.x + 400 * scale}px`,
+            top: `${bgOffset.y + 260 * scale}px`,
             zIndex: 10,
           }}
         >
@@ -891,7 +891,7 @@ export default function PhotoboothApp() {
             alt="Upload Photos"
             className="cursor-pointer transition-transform active:scale-95"
             style={{
-              width: `${250 * scale}px`,
+              width: `${200 * scale}px`,
               height: "auto",
             }}
             onClick={() => fileInputRef.current?.click()}
@@ -906,8 +906,8 @@ export default function PhotoboothApp() {
         <div
           className="absolute"
           style={{
-            left: `${bgOffset.x + 15 * scale}px`,
-            top: `${bgOffset.y + 220 * scale}px`,
+            left: `${bgOffset.x + 95 * scale}px`,
+            top: `${bgOffset.y + 270 * scale}px`,
           }}
         >
           <img
@@ -915,7 +915,7 @@ export default function PhotoboothApp() {
             alt="Take Photos"
             className="cursor-pointer transition-transform active:scale-95"
             style={{
-              width: `${250 * scale}px`,
+              width: `${200 * scale}px`,
               height: "auto",
             }}
             onClick={startCamera}
@@ -931,9 +931,9 @@ export default function PhotoboothApp() {
             className="absolute text-center text-white drop-shadow-lg font-bold"
             style={{
               left: `${bgOffset.x + 290 * scale}px`,
-              top: `${bgOffset.y + 320 * scale}px`,
+              top: `${bgOffset.y + 350 * scale}px`,
               width: `${400 * scale}px`,
-              fontSize: `${20 * scale}px`,
+              fontSize: `${17 * scale}px`,
               textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
             }}
           >
@@ -1012,9 +1012,9 @@ export default function PhotoboothApp() {
             onClick={downloadStrip}
             className="absolute cursor-pointer transition-transform hover:scale-105 active:scale-95"
             style={{
-              left: `${bgOffset.x + 1350 * scale}px`,
-              bottom: `${bgOffset.y + 70 * scale}px`,
-              height: `${150 * scale}px`,
+              left: `${bgOffset.x + 1310 * scale}px`,
+              bottom: `${bgOffset.y + 130 * scale}px`,
+              height: `${130 * scale}px`,
               width: "auto",
               zIndex: 10,
             }}
@@ -1109,8 +1109,8 @@ export default function PhotoboothApp() {
           onClick={() => (window.location.href = "/")}
           className="absolute"
           style={{
-            left: `${bgOffset.x - 80 * scale}px`,
-            bottom: `${bgOffset.y + 15 * scale}px`,
+            left: `${bgOffset.x + 30 * scale}px`,
+            bottom: `${bgOffset.y + 85 * scale}px`,
             zIndex: 10,
           }}
         >
@@ -1119,7 +1119,7 @@ export default function PhotoboothApp() {
             alt="Back to Home"
             className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
             style={{
-              width: `${150 * scale}px`,
+              width: `${130 * scale}px`,
               height: "auto",
             }}
             draggable="false"

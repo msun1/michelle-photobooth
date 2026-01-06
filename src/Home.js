@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import homeBg from "./images/backgrounds/home_bg.jpg";
 import startButton from "./images/buttons/start-button.png";
@@ -15,16 +15,56 @@ const WINDOW_WIDTH = 610;
 const WINDOW_HEIGHT = 409;
 
 // X button position on your ex-window-button image (measure these!)
-// Update these values by opening ex-window-button.png and measuring where the X is
-const X_BUTTON_LEFT = 540; // Adjust this - X position from left edge
-const X_BUTTON_TOP = 20; // Adjust this - X position from top edge
-const X_BUTTON_SIZE = 40; // Size of clickable X area
+const X_BUTTON_LEFT = 540;
+const X_BUTTON_TOP = 20;
+const X_BUTTON_SIZE = 40;
 
 export default function Home() {
   const navigate = useNavigate();
   const [showExamples, setShowExamples] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [bgOffset, setBgOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);
   const windowRef = useRef(null);
+
+  // Calculate actual background position and scale
+  useEffect(() => {
+    const updateScale = () => {
+      if (!containerRef.current) return;
+
+      const container = containerRef.current;
+      const containerWidth = container.offsetWidth;
+      const containerHeight = container.offsetHeight;
+
+      // Calculate how the background actually renders with object-fit: contain
+      const containerAspect = containerWidth / containerHeight;
+      const bgAspect = HOME_BG_WIDTH / HOME_BG_HEIGHT;
+
+      let actualBgWidth, actualBgHeight, offsetX, offsetY;
+
+      if (containerAspect > bgAspect) {
+        // Container is wider - bg is limited by height
+        actualBgHeight = containerHeight;
+        actualBgWidth = actualBgHeight * bgAspect;
+        offsetX = (containerWidth - actualBgWidth) / 2;
+        offsetY = 0;
+      } else {
+        // Container is taller - bg is limited by width
+        actualBgWidth = containerWidth;
+        actualBgHeight = actualBgWidth / bgAspect;
+        offsetX = 0;
+        offsetY = (containerHeight - actualBgHeight) / 2;
+      }
+
+      const newScale = actualBgWidth / HOME_BG_WIDTH;
+      setScale(newScale);
+      setBgOffset({ x: offsetX, y: offsetY });
+    };
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
 
   const handleExWindowClick = (e) => {
     if (!windowRef.current) return;
@@ -40,14 +80,6 @@ export default function Home() {
     const xButtonTop = (X_BUTTON_TOP / WINDOW_HEIGHT) * rect.height;
     const xButtonBottom =
       ((X_BUTTON_TOP + X_BUTTON_SIZE) / WINDOW_HEIGHT) * rect.height;
-
-    console.log("Click at:", x, y);
-    console.log("X button bounds:", {
-      xButtonLeft,
-      xButtonRight,
-      xButtonTop,
-      xButtonBottom,
-    });
 
     if (
       x >= xButtonLeft &&
@@ -67,9 +99,11 @@ export default function Home() {
         style={{
           backgroundImage: `url(${homeBg})`,
           width: "100%",
+          height: "100%",
           maxWidth: `${HOME_BG_WIDTH}px`,
+          maxHeight: `${HOME_BG_HEIGHT}px`,
           aspectRatio: `${HOME_BG_WIDTH} / ${HOME_BG_HEIGHT}`,
-          maxHeight: "100vh",
+          objectFit: "contain",
         }}
       >
         {/* Start Button */}
@@ -79,10 +113,10 @@ export default function Home() {
           onClick={() => navigate("/photobooth")}
           className="absolute cursor-pointer transition-transform hover:scale-105 active:scale-95"
           style={{
-            right: `${(170 / HOME_BG_WIDTH) * 100}%`,
-            top: `${(400 / HOME_BG_HEIGHT) * 100}%`,
+            right: `${bgOffset.x + 170 * scale}px`,
+            top: `${bgOffset.y + 400 * scale}px`,
             width: "auto",
-            height: `${(200 / HOME_BG_HEIGHT) * 100}%`,
+            height: `${200 * scale}px`,
             zIndex: 10,
           }}
           draggable="false"
@@ -95,10 +129,10 @@ export default function Home() {
           onClick={() => setShowExamples(true)}
           className="absolute cursor-pointer transition-transform hover:scale-105 active:scale-95"
           style={{
-            left: `${(385 / HOME_BG_WIDTH) * 100}%`,
-            top: `${(382 / HOME_BG_HEIGHT) * 100}%`,
+            left: `${bgOffset.x + 385 * scale}px`,
+            top: `${bgOffset.y + 407 * scale}px`,
             width: "auto",
-            height: `${(280 / HOME_BG_HEIGHT) * 100}%`,
+            height: `${250 * scale}px`,
             zIndex: 10,
           }}
           draggable="false"
@@ -119,7 +153,7 @@ export default function Home() {
               onClick={handleExWindowClick}
               className="cursor-pointer w-full h-auto"
               style={{
-                maxWidth: `${WINDOW_WIDTH * 1.5}px`, // (change multiplier here!)
+                maxWidth: `${WINDOW_WIDTH * 1.5}px`,
                 zIndex: 1,
               }}
               draggable="false"
